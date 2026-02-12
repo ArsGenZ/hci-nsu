@@ -1,0 +1,15 @@
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Inheritance_2\bin\Debug\net8.0\Inheritance_2.exe
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Inheritance_2\bin\Debug\net8.0\Inheritance_2.deps.json
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Inheritance_2\bin\Debug\net8.0\Inheritance_2.runtimeconfig.json
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Inheritance_2\bin\Debug\net8.0\Inheritance_2.dll
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Inheritance_2\bin\Debug\net8.0\Inheritance_2.pdb
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Inheritance_2\obj\Debug\net8.0\Inheritance_2.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Inheritance_2\obj\Debug\net8.0\Inheritance_2.AssemblyInfoInputs.cache
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Inheritance_2\obj\Debug\net8.0\Inheritance_2.AssemblyInfo.cs
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Inheritance_2\obj\Debug\net8.0\Inheritance_2.csproj.CoreCompileInputs.cache
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Inheritance_2\obj\Debug\net8.0\Inheritance_2.sourcelink.json
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Inheritance_2\obj\Debug\net8.0\Inheritance_2.dll
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Inheritance_2\obj\Debug\net8.0\refint\Inheritance_2.dll
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Inheritance_2\obj\Debug\net8.0\Inheritance_2.pdb
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Inheritance_2\obj\Debug\net8.0\Inheritance_2.genruntimeconfig.cache
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Inheritance_2\obj\Debug\net8.0\ref\Inheritance_2.dll

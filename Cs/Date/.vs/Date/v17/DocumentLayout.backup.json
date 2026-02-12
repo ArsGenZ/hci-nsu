@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Date\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A60CF789-C423-4AE6-AF49-E41B85CB2A3C}|Date.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\date\\classdate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A60CF789-C423-4AE6-AF49-E41B85CB2A3C}|Date.csproj|solutionrelative:classdate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A60CF789-C423-4AE6-AF49-E41B85CB2A3C}|Date.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\date\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{A60CF789-C423-4AE6-AF49-E41B85CB2A3C}|Date.csproj|solutionrelative:mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A60CF789-C423-4AE6-AF49-E41B85CB2A3C}|Date.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\date\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A60CF789-C423-4AE6-AF49-E41B85CB2A3C}|Date.csproj|solutionrelative:mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A60CF789-C423-4AE6-AF49-E41B85CB2A3C}|Date.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\date\\classdate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A60CF789-C423-4AE6-AF49-E41B85CB2A3C}|Date.csproj|solutionrelative:classdate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,24 +22,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "ClassDate.cs",
               "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Date\\ClassDate.cs",
               "RelativeDocumentMoniker": "ClassDate.cs",
-              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Date\\ClassDate.cs*",
-              "RelativeToolTip": "ClassDate.cs*",
-              "ViewState": "AgIAABgAAAAAAAAAAAAYwBYAAAAJAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Date\\ClassDate.cs",
+              "RelativeToolTip": "ClassDate.cs",
+              "ViewState": "AgIAADsAAAAAAAAAAAAswDwAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-10T06:50:21.552Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "MainWindow.xaml",
               "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Date\\MainWindow.xaml",
               "RelativeDocumentMoniker": "MainWindow.xaml",
@@ -51,13 +51,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "MainWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Date\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "MainWindow.xaml.cs",
               "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Date\\MainWindow.xaml.cs",
               "RelativeToolTip": "MainWindow.xaml.cs",
-              "ViewState": "AgIAACYAAAAAAAAAAAAtwD8AAAAoAAAAAAAAAA==",
+              "ViewState": "AgIAAC4AAAAAAAAAAIAwwEwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-10T06:18:04.213Z",
               "EditorCaption": ""
