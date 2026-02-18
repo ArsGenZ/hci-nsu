@@ -1,0 +1,15 @@
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Document_12_02_2026\bin\Debug\net8.0\Document_12_02_2026.exe
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Document_12_02_2026\bin\Debug\net8.0\Document_12_02_2026.deps.json
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Document_12_02_2026\bin\Debug\net8.0\Document_12_02_2026.runtimeconfig.json
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Document_12_02_2026\bin\Debug\net8.0\Document_12_02_2026.dll
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Document_12_02_2026\bin\Debug\net8.0\Document_12_02_2026.pdb
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Document_12_02_2026\obj\Debug\net8.0\Document_12_02_2026.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Document_12_02_2026\obj\Debug\net8.0\Document_12_02_2026.AssemblyInfoInputs.cache
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Document_12_02_2026\obj\Debug\net8.0\Document_12_02_2026.AssemblyInfo.cs
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Document_12_02_2026\obj\Debug\net8.0\Document_12_02_2026.csproj.CoreCompileInputs.cache
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Document_12_02_2026\obj\Debug\net8.0\Document_12_02_2026.sourcelink.json
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Document_12_02_2026\obj\Debug\net8.0\Document_12_02_2026.dll
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Document_12_02_2026\obj\Debug\net8.0\refint\Document_12_02_2026.dll
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Document_12_02_2026\obj\Debug\net8.0\Document_12_02_2026.pdb
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Document_12_02_2026\obj\Debug\net8.0\Document_12_02_2026.genruntimeconfig.cache
+C:\Users\arsen\Documents\GitHub\hci-nsu\Cs\Document_12_02_2026\obj\Debug\net8.0\ref\Document_12_02_2026.dll

@@ -8,7 +8,7 @@ namespace Inheritance_2
 {
     internal abstract class Shape
     {
-        public abstract double Area {  get; }
+        public abstract double Area { get; }
         public abstract double Perimeter { get; }
 
         public void PrintInfo()

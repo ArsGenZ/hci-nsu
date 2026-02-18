@@ -5,6 +5,26 @@
     {
       "AbsoluteMoniker": "D:0:0:{1A3987FB-8C0C-42C0-A988-DC6BCCE0B8C8}|Document_12_02_2026.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\document_12_02_2026\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1A3987FB-8C0C-42C0-A988-DC6BCCE0B8C8}|Document_12_02_2026.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A3987FB-8C0C-42C0-A988-DC6BCCE0B8C8}|Document_12_02_2026.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\document_12_02_2026\\presentationdocument.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A3987FB-8C0C-42C0-A988-DC6BCCE0B8C8}|Document_12_02_2026.csproj|solutionrelative:presentationdocument.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A3987FB-8C0C-42C0-A988-DC6BCCE0B8C8}|Document_12_02_2026.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\document_12_02_2026\\documentmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A3987FB-8C0C-42C0-A988-DC6BCCE0B8C8}|Document_12_02_2026.csproj|solutionrelative:documentmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A3987FB-8C0C-42C0-A988-DC6BCCE0B8C8}|Document_12_02_2026.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\document_12_02_2026\\spreadsheetdocument.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A3987FB-8C0C-42C0-A988-DC6BCCE0B8C8}|Document_12_02_2026.csproj|solutionrelative:spreadsheetdocument.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A3987FB-8C0C-42C0-A988-DC6BCCE0B8C8}|Document_12_02_2026.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\document_12_02_2026\\textdocument.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A3987FB-8C0C-42C0-A988-DC6BCCE0B8C8}|Document_12_02_2026.csproj|solutionrelative:textdocument.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A3987FB-8C0C-42C0-A988-DC6BCCE0B8C8}|Document_12_02_2026.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\document_12_02_2026\\document.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A3987FB-8C0C-42C0-A988-DC6BCCE0B8C8}|Document_12_02_2026.csproj|solutionrelative:document.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,17 +34,78 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 5,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "DocumentManager.cs",
+              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Document_12_02_2026\\DocumentManager.cs",
+              "RelativeDocumentMoniker": "DocumentManager.cs",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Document_12_02_2026\\DocumentManager.cs",
+              "RelativeToolTip": "DocumentManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-17T15:18:55.644Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PresentationDocument.cs",
+              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Document_12_02_2026\\PresentationDocument.cs",
+              "RelativeDocumentMoniker": "PresentationDocument.cs",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Document_12_02_2026\\PresentationDocument.cs",
+              "RelativeToolTip": "PresentationDocument.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAQwBkAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-17T15:17:40.935Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "SpreadsheetDocument.cs",
+              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Document_12_02_2026\\SpreadsheetDocument.cs",
+              "RelativeDocumentMoniker": "SpreadsheetDocument.cs",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Document_12_02_2026\\SpreadsheetDocument.cs",
+              "RelativeToolTip": "SpreadsheetDocument.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-17T15:16:59.44Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "TextDocument.cs",
+              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Document_12_02_2026\\TextDocument.cs",
+              "RelativeDocumentMoniker": "TextDocument.cs",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Document_12_02_2026\\TextDocument.cs",
+              "RelativeToolTip": "TextDocument.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-17T15:16:24.631Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Document.cs",
+              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Document_12_02_2026\\Document.cs",
+              "RelativeDocumentMoniker": "Document.cs",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Document_12_02_2026\\Document.cs",
+              "RelativeToolTip": "Document.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-12T04:06:20.919Z"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Document_12_02_2026\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Document_12_02_2026\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Document_12_02_2026\\Program.cs*",
+              "RelativeToolTip": "Program.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-12T04:05:35.878Z",
               "EditorCaption": ""

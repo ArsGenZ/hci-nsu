@@ -7,12 +7,12 @@
       "RelativeMoniker": "D:0:0:{7B1939D2-CF05-4A73-8BA7-B1A9D6414A0E}|Inheritance_2.csproj|solutionrelative:rectangle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7B1939D2-CF05-4A73-8BA7-B1A9D6414A0E}|Inheritance_2.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\inheritance_2\\shape.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7B1939D2-CF05-4A73-8BA7-B1A9D6414A0E}|Inheritance_2.csproj|solutionrelative:shape.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{7B1939D2-CF05-4A73-8BA7-B1A9D6414A0E}|Inheritance_2.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\inheritance_2\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{7B1939D2-CF05-4A73-8BA7-B1A9D6414A0E}|Inheritance_2.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B1939D2-CF05-4A73-8BA7-B1A9D6414A0E}|Inheritance_2.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\inheritance_2\\shape.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B1939D2-CF05-4A73-8BA7-B1A9D6414A0E}|Inheritance_2.csproj|solutionrelative:shape.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{7B1939D2-CF05-4A73-8BA7-B1A9D6414A0E}|Inheritance_2.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\inheritance_2\\triangle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -40,9 +40,10 @@
               "RelativeDocumentMoniker": "Triangle.cs",
               "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Inheritance_2\\Triangle.cs",
               "RelativeToolTip": "Triangle.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAgwBwAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAABMAAAAAAAAAAAAkwBwAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-11T16:38:07.3Z"
+              "WhenOpened": "2026-02-11T16:38:07.3Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -52,9 +53,10 @@
               "RelativeDocumentMoniker": "Circle.cs",
               "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Inheritance_2\\Circle.cs",
               "RelativeToolTip": "Circle.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAABFAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAA8AAABFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-11T16:33:42.676Z"
+              "WhenOpened": "2026-02-11T16:33:42.676Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -62,9 +64,9 @@
               "Title": "Rectangle.cs",
               "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Inheritance_2\\Rectangle.cs",
               "RelativeDocumentMoniker": "Rectangle.cs",
-              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Inheritance_2\\Rectangle.cs",
-              "RelativeToolTip": "Rectangle.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAIwBAAAABJAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Inheritance_2\\Rectangle.cs*",
+              "RelativeToolTip": "Rectangle.cs*",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAIwBMAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-05T05:15:31.54Z",
               "EditorCaption": ""
@@ -72,27 +74,27 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Shape.cs",
-              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Inheritance_2\\Shape.cs",
-              "RelativeDocumentMoniker": "Shape.cs",
-              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Inheritance_2\\Shape.cs",
-              "RelativeToolTip": "Shape.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-05T05:02:29.046Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Inheritance_2\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Inheritance_2\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAyAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-05T05:00:39.854Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Shape.cs",
+              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Inheritance_2\\Shape.cs",
+              "RelativeDocumentMoniker": "Shape.cs",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Inheritance_2\\Shape.cs",
+              "RelativeToolTip": "Shape.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-05T05:02:29.046Z",
               "EditorCaption": ""
             }
           ]

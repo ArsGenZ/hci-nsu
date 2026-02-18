@@ -9,16 +9,20 @@ namespace Document_12_02_2026
     internal class Document
     {
         public string Title { get; set; }
-        public string DateCreated { get; set; }
+        public DateTime DateCreated { get; set; }
 
-        internal Document(string Title, string DateCreated)
+        public Document(string title, DateTime dateCreated)
         {
-
+            Title = title;
+            DateCreated = dateCreated;
         }
-        protected virtual void Print()
+
+        // Виртуальный метод Print
+        public virtual void Print()
         {
-            Console.WriteLine($"Title - {Title}");
-            Console.WriteLine($"Created date - {DateCreated}");
+            Console.WriteLine($"--- Документ ---");
+            Console.WriteLine($"Заголовок: {Title}");
+            Console.WriteLine($"Дата создания: {DateCreated.ToShortDateString()}");
         }
     }
 }
