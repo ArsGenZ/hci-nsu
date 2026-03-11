@@ -10,16 +10,16 @@ struct Node {
     Node(int val) : data(val), next(nullptr) {}
 };
 
-// --- Функции управления списком ---
+//Функции управления списком
+void clearList(Node*& head);
 
-// 1. Создать пустой список (возвращает nullptr)
-// Если список уже существовал, предварительно освобождаем память
+// 1. Создать пустой список
 void createList(Node*& head) {
-    clearList(head); // Очищаем, если что-то было
+    clearList(head);
     cout << "Пустой список создан." << endl;
 }
 
-// Поиск элемента по значению (возвращает true, если найден)
+// Поиск элемента по значению
 bool searchElement(Node* head, int value) {
     Node* current = head;
     while (current != nullptr) {
@@ -33,7 +33,6 @@ bool searchElement(Node* head, int value) {
 
 // 2. Добавить элемент (упорядоченно, без дубликатов)
 void addElement(Node*& head, int value) {
-    // Проверка на дубликат
     if (searchElement(head, value)) {
         cout << "Элемент " << value << " уже существует в списке. Добавление отменено." << endl;
         return;
@@ -65,7 +64,6 @@ void removeElement(Node*& head, int value) {
         return;
     }
 
-    // Если удаляем голову
     if (head->data == value) {
         Node* temp = head;
         head = head->next;
@@ -74,7 +72,6 @@ void removeElement(Node*& head, int value) {
         return;
     }
 
-    // Поиск узла перед удаляемым
     Node* current = head;
     while (current->next != nullptr && current->next->data != value) {
         current = current->next;
@@ -132,19 +129,16 @@ void showMenu() {
 }
 
 int main() {
-    // Инициализация списка (головы)
+    // Инициализация списка
     Node* head = nullptr;
     int choice;
     int value;
 
-    // Устанавливаем локаль для корректного отображения русского текста (для Windows)
-    // Для Linux/macOS может потребоваться setlocale(LC_ALL, "");
-    setlocale(LC_ALL, "Russian"); 
+    setlocale(LC_ALL, "Russian");
 
     do {
         showMenu();
         if (!(cin >> choice)) {
-            // Обработка неверного ввода (если ввели букву вместо цифры)
             cin.clear();
             cin.ignore(32767, '\n');
             cout << "Неверный ввод. Попробуйте снова." << endl;
@@ -186,7 +180,6 @@ int main() {
 
     } while (choice != 6);
 
-    // Освобождение памяти перед завершением программы (на случай, если пользователь не очистил сам)
     clearList(head);
 
     return 0;
