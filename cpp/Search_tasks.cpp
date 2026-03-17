@@ -143,6 +143,17 @@ int main()
    free(str);
    free(search_str);
    return 0;
+   /*
+    * aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    * HELP ME! HELP ME! HELP ME!
+    * HELP ME! HELP ME! HELP ME!
+    * HELP ME! HELP ME! HELP ME!
+    * HELP ME! HELP ME! HELP ME!
+    * HELP ME! HELP ME! HELP ME!
+    * HELP ME! HELP ME! HELP ME!
+    * HELP ME! HELP ME! HELP ME!
+    * aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    */
 
    //task 4
 //    int size;
