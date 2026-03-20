@@ -183,6 +183,41 @@ int main() {
 
 
 // # 1 Task
+<<<<<<< HEAD
+    // Node* head = nullptr;
+    // int value;
+    // do
+    // {
+    //     if (!(cin >> value)) {
+    //             cin.clear();
+    //             cin.ignore(32767, '\n');
+    //             break;;
+    //         }
+
+    //     Node* newNode = new Node(value);
+    //     newNode->next = head;
+    //     head = newNode;
+    // }while (true);
+
+    // printList(head);
+    // Node* current = head;
+    // int count = 0;
+//     while (current != nullptr){
+//         if (current->data < 0 && current->data % 7 == 0)
+//             count++;
+//         current = current->next;
+//     }
+//     cout << count << endl;
+//     clearList(head);
+
+//     return 0;
+// }
+
+
+// // Task 2
+//     Node* head = nullptr;
+//     Node* tail = nullptr;
+=======
     Node* head = nullptr;
     int value;
     do
@@ -212,6 +247,7 @@ int main() {
 
 
 //     Node* head = nullptr;
+>>>>>>> 86e2027d06cc58bbb7695d816f3dd37751ce7315
 //     int value;
 //     int arithmetic_mean;
 //     do
@@ -223,6 +259,24 @@ int main() {
 //             }
 
 //         Node* newNode = new Node(value);
+<<<<<<< HEAD
+
+//         if (head == nullptr) {
+//             head = newNode;
+//             tail = newNode;
+//         } else {
+//             tail->next = newNode;
+//             tail = newNode;
+//         }
+//         int count = 0;
+//         int temp = 0;
+//         Node* current = head;
+//         while (current != nullptr) {
+//             temp += current->data;
+//             current = current->next;
+//             count++;
+//         }
+=======
 //         Node* current = head;
 //         int count = 0;
 //         int temp = 0;
@@ -234,6 +288,7 @@ int main() {
 //         // Вставка между current и current->next
 //         newNode->next = current->next;
 //         current->next = newNode;
+>>>>>>> 86e2027d06cc58bbb7695d816f3dd37751ce7315
 //         arithmetic_mean = (temp + value) / (count + 1);
 //     }while (true);
 
@@ -243,3 +298,95 @@ int main() {
 
 //     return 0;
 // }
+<<<<<<< HEAD
+
+// Task 3
+// Node* head = nullptr;
+//     int value;
+//     do
+//     {
+//         if (!(cin >> value)) {
+//                 cin.clear();
+//                 cin.ignore(32767, '\n');
+//                 break;
+//             }
+
+//         Node* newNode = new Node(value);
+//         newNode->next = head;
+//         head = newNode;
+//     }while (true);
+
+//     printList(head);
+
+//     Node* current = head;
+//     while (current != nullptr) {
+//         Node* runner = current;
+//         while (runner->next != nullptr) {
+//             if (runner->next->data == current->data) {
+//                 Node* temp = runner->next;
+//                 runner->next = runner->next->next;
+//                 delete temp;
+//             } else {
+//                 runner = runner->next;
+//             }
+//         }
+//         current = current->next;
+//     }
+//     printList(head);
+//     clearList(head);
+
+//     return 0;
+// }
+
+// Task 4
+int num = 0;
+cin >> num;
+
+Node* head = nullptr;
+    int value;
+    do
+    {
+        if (!(cin >> value)) {
+                cin.clear();
+                cin.ignore(32767, '\n');
+                break;
+            }
+
+        Node* newNode = new Node(value);
+        newNode->next = head;
+        head = newNode;
+    }while (true);
+
+    printList(head);
+
+    Node* current = head;
+    Node* prev = nullptr;
+    while (current != nullptr && current->next != nullptr){
+        if (current->next->data == num) {
+            Node* temp = current;
+
+            if(prev == nullptr)
+                head = current->next;
+            else
+                prev->next = current->next;
+
+            current = current->next;
+            delete temp;
+
+        } else {
+            prev = current;
+            current = current->next;
+        }
+    }
+
+    printList(head);
+    clearList(head);
+
+    return 0;
+}
+
+
+// Task 6
+//IN singly_Task6.cpp
+=======
+>>>>>>> 86e2027d06cc58bbb7695d816f3dd37751ce7315
