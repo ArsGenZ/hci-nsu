@@ -6,80 +6,67 @@
 using namespace std;
 
 // Узел односвязного списка
-// Хранит значение и указатель на следующий узел
 template <typename T>
 struct Node {
-    T data;           // Данные узла
-    Node<T>* next;    // Указатель на следующий узел
+    T data;
+    Node<T>* next;
 
     // Конструктор узла
     Node(T value) : data(value), next(nullptr) {}
 };
 
-// Шаблонный класс Стека на основе односвязного списка
+// Шаблонный класс Стека
 template <typename T>
 class Stack {
 private:
-    Node<T>* topNode;  // Указатель на верхний элемент стека
-    int size;          // Текущее количество элементов
+    Node<T>* topNode;
+    int size;
 
 public:
-    // 1. Создать стек (Конструктор)
-    // Аналог функции create(*s)
+    // 1. create(*s)
     Stack() {
         topNode = nullptr;  // Изначально стек пуст
         size = 0;
-        cout << "Стек создан." << endl;
+        // cout << "Стек создан." << endl; //ЗАКОМЕНТИРУЙ ПОСЛЕ ПОКАЗА СТЕКА
     }
 
-    // Деструктор - очищает память при удалении стека
+    // Деструктор
     ~Stack() {
         while (!isEmpty()) {
             pop();
         }
-        cout << "Стек удален, память освобождена." << endl;
+        // cout << "Стек удален, память освобождена." << endl; //ЗАКОМЕНТИРУЙ ПОСЛЕ ПОКАЗА СТЕКА
     }
 
-    // 2. Добавить элемент в стек
-    // Аналог функции push(*s, x)
+    // 2. push(*s, x)
     void push(T x) {
-        Node<T>* newNode = new Node<T>(x);  // Создаем новый узел
-        newNode->next = topNode;            // Новый узел указывает на старый верх
-        topNode = newNode;                  // Верх теперь новый узел
+        Node<T>* newNode = new Node<T>(x);
+        newNode->next = topNode;
+        topNode = newNode;
         size++;
-        cout << "Элемент " << x << " добавлен в стек." << endl;
+        //ЗАКОМЕНТИРУЙ ПОСЛЕ ПОКАЗА СТЕКА
+        // cout << "Элемент " << x << " добавлен в стек." << endl;
     }
 
-    // 3. Извлечь элемент из стека
-    // Аналог функции pop(*s)
+    // 3. pop(*s)
     T pop() {
-        if (isEmpty()) {
-            cout << "Ошибка: Стек пуст (Stack Underflow)!" << endl;
-            return T();  // Возвращаем значение по умолчанию
-        }
 
-        Node<T>* temp = topNode;      // Запоминаем текущий верх
-        T value = temp->data;         // Сохраняем данные
-        topNode = topNode->next;      // Перемещаем верх на следующий узел
-        delete temp;                  // Освобождаем память старого верха
+        Node<T>* temp = topNode;
+        T value = temp->data;
+        topNode = topNode->next;
+        delete temp;
         size--;
-
-        cout << "Элемент " << value << " удален из стека." << endl;
+        //ЗАКОМЕНТИРУЙ ПОСЛЕ ПОКАЗА СТЕКА
+        // cout << "Элемент " << value << " удален из стека." << endl;
         return value;
     }
 
-    // 4. Посмотреть значение на верхушке
-    // Аналог функции peek(*s)
+    // 4. peek(*s)
     T peek() {
-        if (isEmpty()) {
-            cout << "Ошибка: Стек пуст!" << endl;
-            return T();
-        }
         return topNode->data;
     }
 
-    // 5. Проверка на пустоту
-    // Аналог функции empty(*s)
+    // 5. empty(*s)
     bool isEmpty() {
         return (topNode == nullptr);
     }
@@ -110,11 +97,10 @@ private:
         switch (op) {
             case '(': return 1;
             case ')': return 2;
-            case '=': return 3;
             case '+':
-            case '-': return 4;
+            case '-': return 3;
             case '*':
-            case '/': return 5;
+            case '/': return 4;
             default: return 0;
         }
     }
@@ -187,7 +173,7 @@ private:
     bool hasError;
 
     bool isOperator(char c) {
-        return (c == '+' || c == '-' || c == '*' || c == '/' || c == '=');
+        return (c == '+' || c == '-' || c == '*' || c == '/');
     }
 
     double applyOperation(double op2, double op1, char op) {
@@ -202,7 +188,6 @@ private:
                     return 0;
                 }
                 return op1 / op2;
-            case '=': return op2;
             default: return 0;
         }
     }
@@ -294,12 +279,10 @@ void clearInputBuffer() {
 
 // #1
 // int main() {
-//     // Создаем стек для целых чисел
-//     // Здесь вызывается функция create (конструктор)
-//     Stack<int> myStack;
+//     Stack<string> myStack;
 
 //     int choice;
-//     int value;
+//     string value;
 
 //     while (true) {
 //         showStackMenu();
@@ -313,14 +296,16 @@ void clearInputBuffer() {
 //                 break;
 
 //             case 2: // Pop
-//                 value = myStack.pop();
-//                 break;
+//             if (!myStack.isEmpty()) value = myStack.pop();
+//             else cout << "Стек пуст" << endl;
+//             break;
 
 //             case 3: // Peek
-//                 value = myStack.peek();
 //                 if (!myStack.isEmpty()) {
+//                     value = myStack.peek();
 //                     cout << "Верхний элемент: " << value << endl;
 //                 }
+//                 else cout << "Стек пуст" << endl;
 //                 break;
 
 //             case 4: // Empty
@@ -354,9 +339,6 @@ int main() {
     double result;
 
     cout << "=== Конвертер инфиксной формы в постфиксную ===" << endl;
-    cout << "Приоритеты операций:" << endl;
-    cout << "  (  )  =  + -  * /" << endl;
-    cout << "  1  2  3  4   5" << endl;
 
     while (true) {
         showConvertMenu();
@@ -423,13 +405,13 @@ int main() {
                         break;
                     }
 
-                    // Шаг 1: Конвертация
+                    // Конвертация
                     postfix = converter.convert(infix);
-                    cout << "\n[Шаг 1] Постфиксная форма: " << postfix << endl;
+                    cout << "\nПостфиксная форма: " << postfix << endl;
 
-                    // Шаг 2: Вычисление
+                    // Вычисление
                     result = evaluator.evaluate(postfix);
-                    cout << "\n[Шаг 2] Результат вычисления: " << result << endl;
+                    cout << "\nРезультат вычисления: " << result << endl;
 
                     cout << "\n********** ИТОГ **********" << endl;
                     cout << "Инфикс:     " << infix << endl;
