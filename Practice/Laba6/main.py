@@ -10,7 +10,7 @@ from Classes.weapon import Weapon
 
 
 def play_game():
-    kingdom = Kingdom("Элдория", territory=100, food=100)
+    kingdom = Kingdom("Мобиус", territory=100, food=100)
     strategy_list = [AggressiveStrategy(), BalancedStrategy(), DefensiveStrategy()]
 
     sword = Weapon("Стальной клинок", 15)
