@@ -1,18 +1,18 @@
 ```
-# Compiled and build artifacts
+# Build artifacts
+*.o
+*.obj
 *.exe
 *.dll
-*.obj
+*.so
+*.a
 *.out
-bin/
-obj/
-Debug/
-Release/
 
 # Dependencies
 packages/
-node_modules/
-vendor/
+lib/
+bin/
+obj/
 
 # Logs and temp files
 *.log
@@ -28,8 +28,25 @@ vendor/
 .vscode/
 .idea/
 *.userprefs
+*.suo
+*.user
+*.aps
+*.ncb
+*.ilk
+*.pdb
+*.ipch
+*.pch
+*.res
+*.metaproj
+*.userosscache
+*.sln.docstates
 
 # OS generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 ```

@@ -16,10 +16,11 @@ namespace Spring_diogram.Parsers
             try
             {
                 string[] lines = File.ReadAllLines(_path);
-
-                foreach (string line in lines)
+                
+                // Пропускаем первую строку (название "oscillator")
+                for (int i = 1; i < lines.Length; i++)
                 {
-                    string trimmedLine = line.Trim();
+                    string trimmedLine = lines[i].Trim();
 
                     // Пропускаем пустые строки и комментарии
                     if (string.IsNullOrEmpty(trimmedLine) || trimmedLine.StartsWith("#"))

@@ -15,8 +15,15 @@ namespace Spring_diogram.Parsers
 
             try
             {
+                // Чтение всех строк и пропуск первой строки (название)
+                string[] lines = File.ReadAllLines(_path);
+                if (lines.Length == 0)
+                    throw new Exception("JSON файл пуст");
+
+                // Пропускаем первую строку (название "rc")
+                string jsonContent = string.Join(Environment.NewLine, lines.Skip(1));
+                
                 // Парсинг JSON формата
-                string jsonContent = File.ReadAllText(_path);
                 using JsonDocument doc = JsonDocument.Parse(jsonContent);
                 JsonElement root = doc.RootElement;
 

@@ -15,8 +15,16 @@ namespace Spring_diogram.Parsers
 
             try
             {
+                // Чтение всех строк и пропуск первой строки (название)
+                string[] lines = File.ReadAllLines(_path);
+                if (lines.Length == 0)
+                    throw new Exception("XML файл пуст");
+
+                // Пропускаем первую строку (название "cooling")
+                string xmlContent = string.Join(Environment.NewLine, lines.Skip(1));
+                
                 // Парсинг XML формата
-                XDocument doc = XDocument.Load(_path);
+                XDocument doc = XDocument.Parse(xmlContent);
                 XElement root = doc.Root;
 
                 if (root == null)
