@@ -27,6 +27,13 @@
 
             Console.WriteLine(">>> Финальное состояние:\n");
             DeviceManager.PrintAllDevices(devices);
+
+            var mouse_devices = devices.OfType<Mouse>().ToArray();
+            foreach(var mouse in mouse_devices)
+            {
+                if (mouse.Name == "Razer DeathAdder")
+                    Console.WriteLine("YYYYYYYYYYYYYYYYAAAAAAAAAAAAAAAAAAAA");
+            }
         }
     }
 }

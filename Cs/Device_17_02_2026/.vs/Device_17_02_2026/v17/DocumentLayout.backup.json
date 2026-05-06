@@ -7,16 +7,12 @@
       "RelativeMoniker": "D:0:0:{4F8E19A2-EE0C-4C60-8338-08C8D3EAA070}|Device_17_02_2026.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4F8E19A2-EE0C-4C60-8338-08C8D3EAA070}|Device_17_02_2026.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\device_17_02_2026\\devicemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4F8E19A2-EE0C-4C60-8338-08C8D3EAA070}|Device_17_02_2026.csproj|solutionrelative:devicemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{4F8E19A2-EE0C-4C60-8338-08C8D3EAA070}|Device_17_02_2026.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\device_17_02_2026\\mouse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4F8E19A2-EE0C-4C60-8338-08C8D3EAA070}|Device_17_02_2026.csproj|solutionrelative:mouse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4F8E19A2-EE0C-4C60-8338-08C8D3EAA070}|Device_17_02_2026.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\device_17_02_2026\\printer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4F8E19A2-EE0C-4C60-8338-08C8D3EAA070}|Device_17_02_2026.csproj|solutionrelative:printer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4F8E19A2-EE0C-4C60-8338-08C8D3EAA070}|Device_17_02_2026.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\device_17_02_2026\\mouse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4F8E19A2-EE0C-4C60-8338-08C8D3EAA070}|Device_17_02_2026.csproj|solutionrelative:mouse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4F8E19A2-EE0C-4C60-8338-08C8D3EAA070}|Device_17_02_2026.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\device_17_02_2026\\keyboard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -25,6 +21,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{4F8E19A2-EE0C-4C60-8338-08C8D3EAA070}|Device_17_02_2026.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\device_17_02_2026\\device.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4F8E19A2-EE0C-4C60-8338-08C8D3EAA070}|Device_17_02_2026.csproj|solutionrelative:device.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4F8E19A2-EE0C-4C60-8338-08C8D3EAA070}|Device_17_02_2026.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\device_17_02_2026\\devicemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4F8E19A2-EE0C-4C60-8338-08C8D3EAA070}|Device_17_02_2026.csproj|solutionrelative:devicemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,7 +38,7 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 5,
               "Title": "DeviceManager.cs",
               "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Device_17_02_2026\\DeviceManager.cs",
               "RelativeDocumentMoniker": "DeviceManager.cs",
@@ -46,8 +46,7 @@
               "RelativeToolTip": "DeviceManager.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-17T15:28:59.65Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-17T15:28:59.65Z"
             },
             {
               "$type": "Document",
@@ -57,27 +56,27 @@
               "RelativeDocumentMoniker": "Printer.cs",
               "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Device_17_02_2026\\Printer.cs",
               "RelativeToolTip": "Printer.cs",
-              "ViewState": "AgIAAAoAAAAAAAAAAAAzwCQAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACQAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-17T15:28:09.62Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "Mouse.cs",
               "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Device_17_02_2026\\Mouse.cs",
               "RelativeDocumentMoniker": "Mouse.cs",
               "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Device_17_02_2026\\Mouse.cs",
               "RelativeToolTip": "Mouse.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACQAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAwAAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-17T15:26:53.201Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "Keyboard.cs",
               "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Device_17_02_2026\\Keyboard.cs",
               "RelativeDocumentMoniker": "Keyboard.cs",
@@ -85,12 +84,11 @@
               "RelativeToolTip": "Keyboard.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-17T15:26:01.547Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-17T15:26:01.547Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 4,
               "Title": "Device.cs",
               "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Device_17_02_2026\\Device.cs",
               "RelativeDocumentMoniker": "Device.cs",
@@ -98,8 +96,7 @@
               "RelativeToolTip": "Device.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAADkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-17T15:24:45.871Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-17T15:24:45.871Z"
             },
             {
               "$type": "Document",
@@ -107,9 +104,9 @@
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Device_17_02_2026\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Device_17_02_2026\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAIAAAAAAAAAAAAkwBwAAAAzAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Device_17_02_2026\\Program.cs*",
+              "RelativeToolTip": "Program.cs*",
+              "ViewState": "AgIAAAQAAAAAAAAAAAA8wBAAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-17T15:23:20.598Z",
               "EditorCaption": ""

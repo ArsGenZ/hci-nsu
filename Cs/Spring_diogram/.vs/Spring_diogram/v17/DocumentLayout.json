@@ -1,0 +1,309 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\spring_diogram\\spring_diogram\\viewmodel\\inputviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|solutionrelative:spring_diogram\\viewmodel\\inputviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\spring_diogram\\spring_diogram\\viewmodel\\viewmodelbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|solutionrelative:spring_diogram\\viewmodel\\viewmodelbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\spring_diogram\\spring_diogram\\solvers\\solverresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|solutionrelative:spring_diogram\\solvers\\solverresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\spring_diogram\\spring_diogram\\solvers\\implementation\\coolingsolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|solutionrelative:spring_diogram\\solvers\\implementation\\coolingsolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\spring_diogram\\spring_diogram\\parsers\\coolingparser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|solutionrelative:spring_diogram\\parsers\\coolingparser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\spring_diogram\\spring_diogram\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|solutionrelative:spring_diogram\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\spring_diogram\\spring_diogram\\parsers\\oscillatorparser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|solutionrelative:spring_diogram\\parsers\\oscillatorparser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\spring_diogram\\spring_diogram\\parsers\\parserbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|solutionrelative:spring_diogram\\parsers\\parserbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\spring_diogram\\spring_diogram\\data\\coolinginput.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|solutionrelative:spring_diogram\\data\\coolinginput.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\spring_diogram\\spring_diogram\\common\\undoredocommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|solutionrelative:spring_diogram\\common\\undoredocommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\spring_diogram\\spring_diogram\\solvers\\iequasionsolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|solutionrelative:spring_diogram\\solvers\\iequasionsolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\spring_diogram\\spring_diogram\\parsers\\rcparsercs.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|solutionrelative:spring_diogram\\parsers\\rcparsercs.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\spring_diogram\\spring_diogram\\common\\undoredomanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|solutionrelative:spring_diogram\\common\\undoredomanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\spring_diogram\\spring_diogram\\solvers\\implementation\\rcsolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|solutionrelative:spring_diogram\\solvers\\implementation\\rcsolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\spring_diogram\\spring_diogram\\data\\inputdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|solutionrelative:spring_diogram\\data\\inputdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\spring_diogram\\spring_diogram\\solvers\\implementation\\oscillatorsolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|solutionrelative:spring_diogram\\solvers\\implementation\\oscillatorsolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\spring_diogram\\spring_diogram\\data\\rcinput.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|solutionrelative:spring_diogram\\data\\rcinput.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|c:\\users\\arsen\\documents\\github\\hci-nsu\\cs\\spring_diogram\\spring_diogram\\data\\oscillatorinput.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9FED3290-2224-4010-A238-A686AF43AC89}|Spring_diogram\\Spring_diogram.csproj|solutionrelative:spring_diogram\\data\\oscillatorinput.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "InputViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\ViewModel\\InputViewModel.cs",
+              "RelativeDocumentMoniker": "Spring_diogram\\ViewModel\\InputViewModel.cs",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\ViewModel\\InputViewModel.cs",
+              "RelativeToolTip": "Spring_diogram\\ViewModel\\InputViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T04:52:25.782Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ViewModelBase.cs",
+              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\ViewModel\\ViewModelBase.cs",
+              "RelativeDocumentMoniker": "Spring_diogram\\ViewModel\\ViewModelBase.cs",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\ViewModel\\ViewModelBase.cs",
+              "RelativeToolTip": "Spring_diogram\\ViewModel\\ViewModelBase.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T04:49:40.309Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "OscillatorParser.cs",
+              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\Parsers\\OscillatorParser.cs",
+              "RelativeDocumentMoniker": "Spring_diogram\\Parsers\\OscillatorParser.cs",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\Parsers\\OscillatorParser.cs",
+              "RelativeToolTip": "Spring_diogram\\Parsers\\OscillatorParser.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-02T05:09:10.525Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ParserBase.cs",
+              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\Parsers\\ParserBase.cs",
+              "RelativeDocumentMoniker": "Spring_diogram\\Parsers\\ParserBase.cs",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\Parsers\\ParserBase.cs",
+              "RelativeToolTip": "Spring_diogram\\Parsers\\ParserBase.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-02T05:00:34.282Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "SolverResult.cs",
+              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\Solvers\\SolverResult.cs",
+              "RelativeDocumentMoniker": "Spring_diogram\\Solvers\\SolverResult.cs",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\Solvers\\SolverResult.cs",
+              "RelativeToolTip": "Spring_diogram\\Solvers\\SolverResult.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-02T05:07:26.182Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "CoolingInput.cs",
+              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\DATA\\CoolingInput.cs",
+              "RelativeDocumentMoniker": "Spring_diogram\\DATA\\CoolingInput.cs",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\DATA\\CoolingInput.cs",
+              "RelativeToolTip": "Spring_diogram\\DATA\\CoolingInput.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-02T04:59:22.782Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "CoolingSolver.cs",
+              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\Solvers\\Implementation\\CoolingSolver.cs",
+              "RelativeDocumentMoniker": "Spring_diogram\\Solvers\\Implementation\\CoolingSolver.cs",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\Solvers\\Implementation\\CoolingSolver.cs",
+              "RelativeToolTip": "Spring_diogram\\Solvers\\Implementation\\CoolingSolver.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-02T05:07:35.613Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "CoolingParser.cs",
+              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\Parsers\\CoolingParser.cs",
+              "RelativeDocumentMoniker": "Spring_diogram\\Parsers\\CoolingParser.cs",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\Parsers\\CoolingParser.cs",
+              "RelativeToolTip": "Spring_diogram\\Parsers\\CoolingParser.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAQwBEAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-02T04:59:25.742Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "Spring_diogram\\MainWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\MainWindow.xaml.cs",
+              "RelativeToolTip": "Spring_diogram\\MainWindow.xaml.cs",
+              "ViewState": "AgIAACkAAAAAAAAAAAAgwCYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-02T04:58:08.533Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "UndoRedoCommand.cs",
+              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\Common\\UndoRedoCommand.cs",
+              "RelativeDocumentMoniker": "Spring_diogram\\Common\\UndoRedoCommand.cs",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\Common\\UndoRedoCommand.cs",
+              "RelativeToolTip": "Spring_diogram\\Common\\UndoRedoCommand.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-02T05:13:28.47Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "IEquasionSolver.cs",
+              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\Solvers\\IEquasionSolver.cs",
+              "RelativeDocumentMoniker": "Spring_diogram\\Solvers\\IEquasionSolver.cs",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\Solvers\\IEquasionSolver.cs",
+              "RelativeToolTip": "Spring_diogram\\Solvers\\IEquasionSolver.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-02T05:07:15.589Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "RcParsercs.cs",
+              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\Parsers\\RcParsercs.cs",
+              "RelativeDocumentMoniker": "Spring_diogram\\Parsers\\RcParsercs.cs",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\Parsers\\RcParsercs.cs",
+              "RelativeToolTip": "Spring_diogram\\Parsers\\RcParsercs.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-02T05:04:37.721Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "OscillatorSolver.cs",
+              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\Solvers\\Implementation\\OscillatorSolver.cs",
+              "RelativeDocumentMoniker": "Spring_diogram\\Solvers\\Implementation\\OscillatorSolver.cs",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\Solvers\\Implementation\\OscillatorSolver.cs",
+              "RelativeToolTip": "Spring_diogram\\Solvers\\Implementation\\OscillatorSolver.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-02T05:07:44.201Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "RcSolver.cs",
+              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\Solvers\\Implementation\\RcSolver.cs",
+              "RelativeDocumentMoniker": "Spring_diogram\\Solvers\\Implementation\\RcSolver.cs",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\Solvers\\Implementation\\RcSolver.cs",
+              "RelativeToolTip": "Spring_diogram\\Solvers\\Implementation\\RcSolver.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-02T05:07:46.46Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "UndoRedoManager.cs",
+              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\Common\\UndoRedoManager.cs",
+              "RelativeDocumentMoniker": "Spring_diogram\\Common\\UndoRedoManager.cs",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\Common\\UndoRedoManager.cs",
+              "RelativeToolTip": "Spring_diogram\\Common\\UndoRedoManager.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAAwAQAAABCAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-02T05:13:55.398Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "InputData.cs",
+              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\DATA\\InputData.cs",
+              "RelativeDocumentMoniker": "Spring_diogram\\DATA\\InputData.cs",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\DATA\\InputData.cs",
+              "RelativeToolTip": "Spring_diogram\\DATA\\InputData.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-02T04:58:57.19Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "RCInput.cs",
+              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\DATA\\RCInput.cs",
+              "RelativeDocumentMoniker": "Spring_diogram\\DATA\\RCInput.cs",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\DATA\\RCInput.cs",
+              "RelativeToolTip": "Spring_diogram\\DATA\\RCInput.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-02T04:59:19.093Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "OscillatorInput.cs",
+              "DocumentMoniker": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\DATA\\OscillatorInput.cs",
+              "RelativeDocumentMoniker": "Spring_diogram\\DATA\\OscillatorInput.cs",
+              "ToolTip": "C:\\Users\\arsen\\Documents\\GitHub\\hci-nsu\\Cs\\Spring_diogram\\Spring_diogram\\DATA\\OscillatorInput.cs",
+              "RelativeToolTip": "Spring_diogram\\DATA\\OscillatorInput.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-02T04:59:07.514Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
