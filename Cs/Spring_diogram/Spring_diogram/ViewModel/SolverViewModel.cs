@@ -1,6 +1,8 @@
 using OxyPlot;
 using Spring_diogram.Common;
 using Spring_diogram.Solvers;
+using System.Windows.Input;
+using System.Windows;
 
 namespace Spring_diogram.ViewModel
 {
@@ -15,6 +17,14 @@ namespace Spring_diogram.ViewModel
         {
             _undoRedoManager = undoRedoManager;
             _inputViewModel = inputViewModel;
+            SolveCommand = new RelayCommand(_ => Solve(), CanSolve);
+        }
+
+        public ICommand SolveCommand { get; }
+
+        private bool CanSolve(object parameter)
+        {
+            return _inputViewModel.CurrentImportedData != null;
         }
 
         public PlotModel? PlotModel
@@ -59,10 +69,17 @@ namespace Spring_diogram.ViewModel
             if (inputData == null)
                 throw new System.Exception("Входные данные не загружены!");
 
-            var solver = inputData.GetSolver();
-            var result = solver.Solve(inputData);
-            SolverResult = result;
-            PlotModel = CreatePlotModel(result);
+            try
+            {
+                var solver = inputData.GetSolver();
+                var result = solver.Solve(inputData);
+                SolverResult = result;
+                PlotModel = CreatePlotModel(result);
+            }
+            catch (ArithmeticException ex)
+            {
+                MessageBox.Show($"Ошибка при расчете задачи: {ex.Message}", "Ошибка вычисления", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private PlotModel CreatePlotModel(SolverResult result)

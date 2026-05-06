@@ -2,6 +2,8 @@
 using Spring_diogram.DATA;
 using Microsoft.Win32;
 using Spring_diogram.Parsers;
+using System.Windows.Input;
+using System.Windows;
 
 namespace Spring_diogram.ViewModel
 {
@@ -14,7 +16,12 @@ namespace Spring_diogram.ViewModel
         public InputViewModel(UndoRedoManager undoRedoManager)
         {
             _undoRedoManager = undoRedoManager;
+            SelectFileCommand = new RelayCommand(_ => SelectFile());
+            LoadDataCommand = new RelayCommand(_ => LoadDataFromFile(), CanLoadData);
         }
+
+        public ICommand SelectFileCommand { get; }
+        public ICommand LoadDataCommand { get; }
 
         public string FilePath
         {
@@ -26,12 +33,24 @@ namespace Spring_diogram.ViewModel
                     var oldValue = _filePath;
                     _filePath = value;
                     OnPropertyChanged();
+                    RaiseCanExecuteChangedForCommands();
                     _undoRedoManager.AddUndoRedo(
                         () => { _filePath = oldValue; OnPropertyChanged(nameof(FilePath)); },
                         () => { _filePath = value; OnPropertyChanged(nameof(FilePath)); }
                     );
                 }
             }
+        }
+
+        private void RaiseCanExecuteChangedForCommands()
+        {
+            if (LoadDataCommand is RelayCommand rc)
+                rc.RaiseCanExecuteChanged();
+        }
+
+        private bool CanLoadData(object parameter)
+        {
+            return !string.IsNullOrEmpty(FilePath);
         }
 
         public InputData? CurrentImportedData
@@ -74,8 +93,35 @@ namespace Spring_diogram.ViewModel
             if (string.IsNullOrEmpty(FilePath))
                 throw new System.Exception("Путь к файлу не указан!");
 
-            InputData inputData = ParseFile(FilePath);
-            CurrentImportedData = inputData;
+            try
+            {
+                InputData inputData = ParseFile(FilePath);
+                CurrentImportedData = inputData;
+            }
+            catch (KeyNotFoundException ex)
+            {
+                MessageBox.Show($"Ошибка формата данных: {ex.Message}", "Ошибка парсинга", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (NullReferenceException ex)
+            {
+                MessageBox.Show($"Ошибка формата данных: {ex.Message}", "Ошибка парсинга", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (FormatException ex)
+            {
+                MessageBox.Show($"Ошибка формата данных: {ex.Message}", "Ошибка парсинга", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (ArgumentNullException ex)
+            {
+                MessageBox.Show($"Ошибка формата данных: {ex.Message}", "Ошибка парсинга", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (InvalidOperationException ex)
+            {
+                MessageBox.Show($"Ошибка формата данных: {ex.Message}", "Ошибка парсинга", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (System.IO.IOException ex)
+            {
+                MessageBox.Show($"Ошибка работы с файлом: {ex.Message}", "Ошибка файла", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private InputData ParseFile(string path)
