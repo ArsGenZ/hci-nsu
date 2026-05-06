@@ -16,12 +16,16 @@ namespace Spring_diogram.Parsers
             {
                 string[] lines = File.ReadAllLines(_path);
 
-                // Формат: 1 строка - названия свойств, 2 строка - значения
-                if (lines.Length < 2)
-                    throw new FormatException("Файл должен содержать как минимум две строки: заголовки и значения");
+                // Формат файла duffer.txt:
+                // Строка 1: "duffer" (название формата)
+                // Строка 2: заголовки столбцов (delta, alpha, beta, ...)
+                // Строка 3: значения
+                if (lines.Length < 3)
+                    throw new FormatException("Файл должен содержать как минимум три строки: название формата, заголовки и значения");
 
-                string[] headers = lines[0].Split(new[] { '\t', ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
-                string[] values = lines[1].Split(new[] { '\t', ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
+                // Пропускаем первую строку (название формата), читаем заголовки со второй строки
+                string[] headers = lines[1].Split(new[] { '\t', ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] values = lines[2].Split(new[] { '\t', ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
 
                 if (headers.Length != values.Length)
                     throw new FormatException("Количество заголовков не совпадает с количеством значений");
@@ -65,10 +69,12 @@ namespace Spring_diogram.Parsers
                         case "record_stride":
                             input.RecordStride = int.Parse(value, CultureInfo.InvariantCulture);
                             break;
-                        case "timemax":
+                        case "maxtime":
                         case "time_max":
+                        case "timemax":
                             input.MaxTime = numericValue;
                             break;
+                        case "dt":
                         case "timestep":
                         case "time_step":
                         case "deltat":
