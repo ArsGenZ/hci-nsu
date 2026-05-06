@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Spring_diogram")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b63084e67ce85b5772b703509d88f8d7e4e03666")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3e4251d5209489a614c7590c8519332be1b97929")]
 [assembly: System.Reflection.AssemblyProductAttribute("Spring_diogram")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Spring_diogram")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
