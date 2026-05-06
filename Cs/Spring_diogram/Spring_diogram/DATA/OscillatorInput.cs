@@ -1,5 +1,4 @@
 ﻿using Spring_diogram.Solvers;
-using Spring_diogram.Solvers.Implementation;
 
 namespace Spring_diogram.DATA
 {
@@ -13,7 +12,19 @@ namespace Spring_diogram.DATA
 
         public override IEquasionSolver GetSolver()
         {
-            return new OscillatorSolver();
+            return new Solvers.Implementation.OscillatorSolver();
+        }
+
+        public override string ToString()
+        {
+            return $"Тип: Маятник\n" +
+                   $"Масса: {Mass} кг\n" +
+                   $"Жесткость: {Stiffness} Н/м\n" +
+                   $"Затухание: {Damping} кг/с\n" +
+                   $"X0: {X0} м\n" +
+                   $"V0: {V0} м/с\n" +
+                   $"Время: {MaxTime} с\n" +
+                   $"Шаг: {DeltaT} с";
         }
     }
 }

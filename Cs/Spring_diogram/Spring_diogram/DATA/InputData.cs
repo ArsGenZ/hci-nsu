@@ -9,5 +9,10 @@ namespace Spring_diogram.DATA
         public double DeltaT { get; set; }
 
         public abstract IEquasionSolver GetSolver();
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }
