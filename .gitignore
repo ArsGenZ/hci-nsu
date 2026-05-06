@@ -1,52 +1,32 @@
 ```
 # Build artifacts
-*.o
 *.obj
 *.exe
 *.dll
-*.so
-*.a
-*.out
+*.pdb
+*.userprefs
+*.user
+*.suo
+*.cache
+*.nupkg
+*.snupkg
 
 # Dependencies
 packages/
-lib/
-bin/
-obj/
+**/bin/
+**/obj/
+.vs/
+.vscode/
 
-# Logs and temp files
+# Logs
 *.log
-*.tmp
-*.swp
 
 # Environment
 .env
 .env.local
 *.env.*
 
-# Editors
-.vscode/
-.idea/
-*.userprefs
-*.suo
-*.user
-*.aps
-*.ncb
-*.ilk
-*.pdb
-*.ipch
-*.pch
-*.res
-*.metaproj
-*.userosscache
-*.sln.docstates
-
 # OS generated files
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
 ```

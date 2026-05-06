@@ -1,5 +1,4 @@
 ﻿using Spring_diogram.Solvers;
-using Spring_diogram.Solvers.Implementation;
 
 namespace Spring_diogram.DATA
 {
@@ -12,7 +11,18 @@ namespace Spring_diogram.DATA
 
         public override IEquasionSolver GetSolver()
         {
-            return new RcSolver();
+            return new Solvers.Implementation.RcSolver();
+        }
+
+        public override string ToString()
+        {
+            return $"Тип: RC Цепь\n" +
+                   $"Сопротивление: {Resistance} Ом\n" +
+                   $"Ёмкость: {Capacitance} Ф\n" +
+                   $"Напряжение источника: {VoltageSource} В\n" +
+                   $"Начальное напряжение: {U0} В\n" +
+                   $"Время: {MaxTime} с\n" +
+                   $"Шаг: {DeltaT} с";
         }
     }
 }
