@@ -1,55 +1,28 @@
 ```
-# Compiled and build artifacts
+# Build artifacts
+bin/
+obj/
 *.exe
 *.dll
 *.pdb
-*.obj
-*.ilk
-*.lib
-*.so
-*.dylib
-*.class
-*.jar
-*.war
-*.ear
-bin/
-obj/
-Debug/
-Release/
-x64/
-x86/
+*.userprefs
+*.cache
+*.log
 
 # Dependencies
 packages/
 node_modules/
 .nuget/
-.nyc_output/
-coverage/
 
-# Logs and temp files
-*.log
-*.tmp
-*.temp
-*.cache
-
-# Environment
-.env
-.env.local
-.env.*
-
-# Editors
+# IDE files
 .vs/
-.vscode/
 .idea/
-*.userprefs
 *.user
 *.suo
 *.userosscache
 *.sln.docstates
 
-# OS generated files
+# OS files
 .DS_Store
 Thumbs.db
-ehthumbs.db
-Icon?
 ```

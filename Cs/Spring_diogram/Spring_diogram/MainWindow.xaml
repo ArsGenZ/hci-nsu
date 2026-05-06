@@ -15,7 +15,8 @@
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
             <TextBox Text="{Binding InputViewModel.FilePath, UpdateSourceTrigger=PropertyChanged}" Width="500" Margin="0,0,10,0"/>
             <Button Content="Выбрать файл" Width="120" Margin="0,0,10,0" Command="{Binding InputViewModel.SelectFileCommand}"/>
-            <Button Content="Загрузить данные" Width="120" Command="{Binding InputViewModel.LoadDataCommand}"/>
+            <Button Content="Загрузить данные" Width="120" Margin="0,0,10,0" Command="{Binding InputViewModel.LoadDataCommand}"/>
+            <Button Content="Решить" Width="120" Command="{Binding SolverViewModel.SolveCommand}"/>
         </StackPanel>
 
         <!-- Панель управления отменой/повтором -->
