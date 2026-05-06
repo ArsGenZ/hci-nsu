@@ -1,6 +1,7 @@
 ﻿using Spring_diogram.DATA;
 using System.Globalization;
 using System.IO;
+using System.Text.Json;
 
 namespace Spring_diogram.Parsers
 {
@@ -14,46 +15,53 @@ namespace Spring_diogram.Parsers
 
             try
             {
-                string[] lines = File.ReadAllLines(_path);
+                // Парсинг JSON формата
+                string jsonContent = File.ReadAllText(_path);
+                using JsonDocument doc = JsonDocument.Parse(jsonContent);
+                JsonElement root = doc.RootElement;
 
-                foreach (string line in lines)
+                // Чтение полей из JSON
+                if (root.TryGetProperty("Resistance", out JsonElement resistanceElem) ||
+                    root.TryGetProperty("resistance", out resistanceElem))
                 {
-                    string trimmedLine = line.Trim();
+                    if (resistanceElem.TryGetDouble(out double resistance))
+                        input.Resistance = resistance;
+                }
 
-                    if (string.IsNullOrEmpty(trimmedLine))
-                        continue;
+                if (root.TryGetProperty("Capacitance", out JsonElement capacitanceElem) ||
+                    root.TryGetProperty("capacitance", out capacitanceElem))
+                {
+                    if (capacitanceElem.TryGetDouble(out double capacitance))
+                        input.Capacitance = capacitance;
+                }
 
-                    int equalsIndex = trimmedLine.IndexOf(',');
-                    if (equalsIndex == -1)
-                        continue;
+                if (root.TryGetProperty("VoltageSource", out JsonElement voltageSourceElem) ||
+                    root.TryGetProperty("voltageSource", out voltageSourceElem) ||
+                    root.TryGetProperty("voltagesource", out voltageSourceElem))
+                {
+                    if (voltageSourceElem.TryGetDouble(out double voltageSource))
+                        input.VoltageSource = voltageSource;
+                }
 
-                    string key = trimmedLine.Substring(0, equalsIndex).Trim().ToLower();
-                    string value = trimmedLine.Substring(equalsIndex + 1).Trim();
+                if (root.TryGetProperty("U0", out JsonElement u0Elem) ||
+                    root.TryGetProperty("u0", out u0Elem))
+                {
+                    if (u0Elem.TryGetDouble(out double u0))
+                        input.U0 = u0;
+                }
 
-                    if (double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out double numericValue))
-                    {
-                        switch (key)
-                        {
-                            case "resistance":
-                                input.Resistance = numericValue;
-                                break;
-                            case "capacitance":
-                                input.Capacitance = numericValue;
-                                break;
-                            case "voltagesource":
-                                input.VoltageSource = numericValue;
-                                break;
-                            case "u0":
-                                input.U0 = numericValue;
-                                break;
-                            case "timemax":
-                                input.MaxTime = numericValue;
-                                break;
-                            case "timestep":
-                                input.DeltaT = numericValue;
-                                break;
-                        }
-                    }
+                if (root.TryGetProperty("TimeMax", out JsonElement timeMaxElem) ||
+                    root.TryGetProperty("timemax", out timeMaxElem))
+                {
+                    if (timeMaxElem.TryGetDouble(out double timeMax))
+                        input.MaxTime = timeMax;
+                }
+
+                if (root.TryGetProperty("TimeStep", out JsonElement timeStepElem) ||
+                    root.TryGetProperty("timestep", out timeStepElem))
+                {
+                    if (timeStepElem.TryGetDouble(out double timeStep))
+                        input.DeltaT = timeStep;
                 }
 
                 input.Name = "RC Circuit";
@@ -61,7 +69,7 @@ namespace Spring_diogram.Parsers
             }
             catch (Exception ex)
             {
-                throw new Exception($"Ошибка парсинга RC файла: {ex.Message}", ex);
+                throw new Exception($"Ошибка парсинга RC файла (JSON): {ex.Message}", ex);
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using Spring_diogram.DATA;
 using System.Globalization;
 using System.IO;
+using System.Xml.Linq;
 
 namespace Spring_diogram.Parsers
 {
@@ -14,56 +15,40 @@ namespace Spring_diogram.Parsers
 
             try
             {
-                var reader = new StreamReader(_fileStream);
-                string[] lines = File.ReadAllLines(_path);
+                // Парсинг XML формата
+                XDocument doc = XDocument.Load(_path);
+                XElement root = doc.Root;
 
-                foreach (string line in lines)
-                {
-                    string trimmedLine = line.Trim();
+                if (root == null)
+                    throw new Exception("XML файл пуст или некорректен");
 
-                    if (string.IsNullOrEmpty(trimmedLine) || trimmedLine.StartsWith("#"))
-                        continue;
+                // Чтение элементов XML
+                XElement t0Elem = root.Element("T0") ?? root.Element("t0");
+                if (t0Elem != null && double.TryParse(t0Elem.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out double t0))
+                    input.T0 = t0;
 
-                    int equalsIndex = trimmedLine.IndexOf(',');
-                    if (equalsIndex == -1)
-                        equalsIndex = trimmedLine.IndexOf("=");
-                    if (equalsIndex == -1)
-                        equalsIndex = trimmedLine.IndexOf(":");
-                    if (equalsIndex == -1)
-                        continue;
+                XElement tenvElem = root.Element("Tenv") ?? root.Element("tenv");
+                if (tenvElem != null && double.TryParse(tenvElem.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out double tenv))
+                    input.Tenv = tenv;
 
-                    string key = trimmedLine.Substring(0, equalsIndex).Trim().ToLower();
-                    string value = trimmedLine.Substring(equalsIndex + 1).Trim();
+                XElement coeffElem = root.Element("Coeff") ?? root.Element("coeff");
+                if (coeffElem != null && double.TryParse(coeffElem.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out double coeff))
+                    input.Coeff = coeff;
 
-                    if (double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out double numericValue))
-                    {
-                        switch (key)
-                        {
-                            case "t0":
-                                input.T0 = numericValue;
-                                break;
-                            case "tenv":
-                                input.Tenv = numericValue;
-                                break;
-                            case "coeff":
-                                input.Coeff = numericValue;
-                                break;
-                            case "timemax":
-                                input.MaxTime = numericValue;
-                                break;
-                            case "timestep":
-                                input.DeltaT = numericValue;
-                                break;
-                        }
-                    }
-                }
+                XElement timeMaxElem = root.Element("TimeMax") ?? root.Element("timemax");
+                if (timeMaxElem != null && double.TryParse(timeMaxElem.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out double timeMax))
+                    input.MaxTime = timeMax;
+
+                XElement timeStepElem = root.Element("TimeStep") ?? root.Element("timestep");
+                if (timeStepElem != null && double.TryParse(timeStepElem.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out double timeStep))
+                    input.DeltaT = timeStep;
 
                 input.Name = "Cooling";
                 return input;
             }
             catch (Exception ex)
             {
-                throw new Exception($"Ошибка парсинга файла охлаждения: {ex.Message}", ex);
+                throw new Exception($"Ошибка парсинга файла охлаждения (XML): {ex.Message}", ex);
             }
         }
     }

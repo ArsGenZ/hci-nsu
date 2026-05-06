@@ -1,6 +1,7 @@
 ﻿using Spring_diogram.DATA;
 using System.Globalization;
 using System.IO;
+using System.Xml.Linq;
 
 namespace Spring_diogram.Parsers
 {
@@ -24,20 +25,18 @@ namespace Spring_diogram.Parsers
                     if (string.IsNullOrEmpty(trimmedLine) || trimmedLine.StartsWith("#"))
                         continue;
 
-                    // Ищем знак разделения ключа и значения
-                    int equalsIndex = trimmedLine.IndexOf(',');
-                    if (equalsIndex == -1)
-                        equalsIndex = trimmedLine.IndexOf("=");
-                    if (equalsIndex == -1)
-                        equalsIndex = trimmedLine.IndexOf(":");
-                    if (equalsIndex == -1)
+                    // Формат TXT: key=value или key:value через запятую
+                    int separatorIndex = trimmedLine.IndexOf('=');
+                    if (separatorIndex == -1)
+                        separatorIndex = trimmedLine.IndexOf(':');
+                    if (separatorIndex == -1)
+                        separatorIndex = trimmedLine.IndexOf(',');
+                    if (separatorIndex == -1)
                         continue;
 
+                    string key = trimmedLine.Substring(0, separatorIndex).Trim().ToLower();
+                    string value = trimmedLine.Substring(separatorIndex + 1).Trim();
 
-                    string key = trimmedLine.Substring(0, equalsIndex).Trim().ToLower();
-                    string value = trimmedLine.Substring(equalsIndex + 1).Trim();
-
-                    // Парсим число с invariant culture (точка как разделитель)
                     if (double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out double numericValue))
                     {
                         switch (key)
@@ -72,7 +71,7 @@ namespace Spring_diogram.Parsers
             }
             catch (Exception ex)
             {
-                throw new Exception($"Ошибка парсинга файла осциллятора: {ex.Message}", ex);
+                throw new Exception($"Ошибка парсинга файла осциллятора (TXT): {ex.Message}", ex);
             }
         }
     }

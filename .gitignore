@@ -1,0 +1,35 @@
+```
+# Compiled and build artifacts
+*.exe
+*.dll
+*.obj
+*.out
+bin/
+obj/
+Debug/
+Release/
+
+# Dependencies
+packages/
+node_modules/
+vendor/
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Editors
+.vscode/
+.idea/
+*.userprefs
+
+# OS generated files
+.DS_Store
+Thumbs.db
+```
