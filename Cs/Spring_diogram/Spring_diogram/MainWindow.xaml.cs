@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Spring_diogram.ViewModel;
 
 namespace Spring_diogram
 {
@@ -7,6 +8,7 @@ namespace Spring_diogram
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainViewModel();
         }
     }
 }

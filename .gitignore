@@ -1,7 +1,6 @@
 ```
-# Build artifacts and binaries
-bin/
-obj/
+# Compiled and build artifacts
+*.obj
 *.exe
 *.dll
 *.pdb
@@ -12,66 +11,33 @@ obj/
 *.aps
 *.ncb
 *.ilk
+*.exp
+*.lib
 *.iobj
 *.ipdb
 *.tlog
-*.exp
-*.lib
-*.manifest
-*.res
-*.metagen
-*.gch
-*.pch
-*.nib
-*.plist
-*.dSYM/
-*.stackdump
+*.lastbuildstate
 
 # Dependencies
 packages/
-node_modules/
-bower_components/
-jspm_packages/
-.nuget/
-project.lock.json
+bin/
+obj/
+Debug/
+Release/
+x64/
+x86/
 
-# Logs
+# Logs and temp files
 *.log
-*.bak
 *.tmp
+*.temp
 
-# User-specific files
-.vs/
-.vshost.exe
-.userprefs
-.vssettings
-.vssscc
-.sln.docstates
-.userosscache
-.codedude
-.publish.xml
-
-# Environment specific
+# Environment
 .env
 .env.local
-*.userconfig
-*.local
+.env.*
 
-# IDE specific
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-.DS_Store
-Thumbs.db
-
-# OS generated files
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Icon?
-desktop.ini
+# Editors
+.vs/
+.vshistory/
 ```
