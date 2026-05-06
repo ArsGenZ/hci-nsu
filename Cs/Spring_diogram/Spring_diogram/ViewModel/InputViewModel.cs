@@ -22,6 +22,7 @@ namespace Spring_diogram.ViewModel
 
         public ICommand SelectFileCommand { get; }
         public ICommand LoadDataCommand { get; }
+        public SolverViewModel? SolverViewModel { get; set; }
 
         public string FilePath
         {
@@ -44,8 +45,10 @@ namespace Spring_diogram.ViewModel
 
         private void RaiseCanExecuteChangedForCommands()
         {
-            if (LoadDataCommand is RelayCommand rc)
-                rc.RaiseCanExecuteChanged();
+            if (LoadDataCommand is RelayCommand rc1)
+                rc1.RaiseCanExecuteChanged();
+            if (SolverViewModel?.SolveCommand is RelayCommand rc2)
+                rc2.RaiseCanExecuteChanged();
         }
 
         private bool CanLoadData(object parameter)
@@ -64,6 +67,7 @@ namespace Spring_diogram.ViewModel
                     _currentImportedData = value;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(InputDataDescription));
+                    RaiseCanExecuteChangedForCommands();
                     _undoRedoManager.AddUndoRedo(
                         () => { _currentImportedData = oldValue; OnPropertyChanged(nameof(CurrentImportedData)); OnPropertyChanged(nameof(InputDataDescription)); },
                         () => { _currentImportedData = value; OnPropertyChanged(nameof(CurrentImportedData)); OnPropertyChanged(nameof(InputDataDescription)); }
