@@ -12,8 +12,9 @@ namespace Spring_diogram.ViewModel
             InputViewModel = new InputViewModel(_undoRedoManager);
             SolverViewModel = new SolverViewModel(_undoRedoManager, InputViewModel);
             InputViewModel.SolverViewModel = SolverViewModel;
-            UndoCommand = new RelayCommand(_ => Undo());
-            RedoCommand = new RelayCommand(_ => Redo());
+            _undoRedoManager.HistoryChanged += OnHistoryChanged;
+            UndoCommand = new RelayCommand(_ => Undo(), CanUndo);
+            RedoCommand = new RelayCommand(_ => Redo(), CanRedo);
         }
 
         public InputViewModel InputViewModel { get; }
@@ -21,6 +22,15 @@ namespace Spring_diogram.ViewModel
 
         public System.Windows.Input.ICommand UndoCommand { get; }
         public System.Windows.Input.ICommand RedoCommand { get; }
+
+        private void OnHistoryChanged()
+        {
+            ((RelayCommand)UndoCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)RedoCommand).RaiseCanExecuteChanged();
+        }
+
+        private bool CanUndo(object parameter) => _undoRedoManager.CanUndo;
+        private bool CanRedo(object parameter) => _undoRedoManager.CanRedo;
 
         public void Undo()
         {
