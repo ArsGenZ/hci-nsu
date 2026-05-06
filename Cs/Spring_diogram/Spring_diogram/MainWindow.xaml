@@ -14,14 +14,14 @@
         <!-- Панель управления файлами -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
             <TextBox Text="{Binding InputViewModel.FilePath, UpdateSourceTrigger=PropertyChanged}" Width="500" Margin="0,0,10,0"/>
-            <Button Content="Выбрать файл" Width="120" Margin="0,0,10,0" Click="BrowseButton_Click"/>
-            <Button Content="Загрузить данные" Width="120" Click="LoadButton_Click"/>
+            <Button Content="Выбрать файл" Width="120" Margin="0,0,10,0" Command="{Binding InputViewModel.SelectFileCommand}"/>
+            <Button Content="Загрузить данные" Width="120" Command="{Binding InputViewModel.LoadDataCommand}"/>
         </StackPanel>
 
         <!-- Панель управления отменой/повтором -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
-            <Button Content="Undo" Width="100" Margin="0,0,10,0" Click="UndoButton_Click"/>
-            <Button Content="Redo" Width="100" Click="RedoButton_Click"/>
+            <Button Content="Undo" Width="100" Margin="0,0,10,0" Command="{Binding UndoCommand}"/>
+            <Button Content="Redo" Width="100" Command="{Binding RedoCommand}"/>
             <TextBlock x:Name="StatusTextBlock" Margin="20,0,0,0" VerticalAlignment="Center" Foreground="Green"/>
         </StackPanel>
 
