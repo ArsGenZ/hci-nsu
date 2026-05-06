@@ -1,22 +1,15 @@
 ```
-# Compiled and build artifacts
+# Build artifacts and binaries
 *.obj
 *.exe
 *.dll
+*.so
+*.a
+*.lib
 *.pdb
-*.userprefs
-*.cache
-*.suo
-*.user
-*.aps
-*.ncb
 *.ilk
 *.exp
-*.lib
-*.iobj
-*.ipdb
-*.tlog
-*.lastbuildstate
+*.manifest
 
 # Dependencies
 packages/
@@ -27,17 +20,21 @@ Release/
 x64/
 x86/
 
-# Logs and temp files
+# Logs
 *.log
-*.tmp
-*.temp
 
 # Environment
 .env
 .env.local
-.env.*
+*.env.*
 
 # Editors
 .vs/
-.vshistory/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
 ```
