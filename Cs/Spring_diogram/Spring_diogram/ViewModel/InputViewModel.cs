@@ -135,11 +135,13 @@ namespace Spring_diogram.ViewModel
 
             string content = System.IO.File.ReadAllText(path).ToLower();
 
-            ParserBase parser = content.Contains("mass") || content.Contains("stiffness")
-                ? new Parsers.OscillatorParser(path)
-                : (content.Contains("resistance") || content.Contains("capacitance")
-                    ? new Parsers.RcParser(path)
-                    : new Parsers.CoolingParser(path));
+            ParserBase parser = content.Contains("delta") && (content.Contains("alpha") || content.Contains("beta"))
+                ? new Parsers.DuffingParser(path)
+                : (content.Contains("mass") || content.Contains("stiffness")
+                    ? new Parsers.OscillatorParser(path)
+                    : (content.Contains("resistance") || content.Contains("capacitance")
+                        ? new Parsers.RcParser(path)
+                        : new Parsers.CoolingParser(path)));
 
             return parser.Parse();
         }
