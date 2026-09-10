@@ -1,650 +1,391 @@
 import pygame
-import numpy as np
 import random
+import sys
 import pickle
-import os
-from collections import deque
+import math
 
 # Инициализация Pygame
 pygame.init()
 
-# Константы игры
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 400
+# --- КОНСТАНТЫ ---
+WIDTH, HEIGHT = 800, 400
 FPS = 60
-GROUND_Y = 350
-
-# Цвета
+GROUND_Y = 350  # Уровень земли (Y координата низа)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-DINO_COLOR = (50, 50, 50)
-DINO_JUMP_COLOR = (100, 100, 200)  # Синий для прыжка
-CACTUS_COLOR = (0, 150, 0)
-BIRD_COLOR = (150, 50, 50)
-TEXT_COLOR = (50, 50, 50)
+GRAY = (100, 100, 100)
+RED = (255, 0, 0)
+GREEN = (0, 128, 0)
+BLUE = (0, 0, 255)
 
-# Размеры
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Dino Game with Sensor & AI")
+clock = pygame.time.Clock()
+font = pygame.font.Font(None, 36)
+
+# Параметры Динозавра
+DINO_X = 50
 DINO_WIDTH = 40
-DINO_HEIGHT = 60
-CACTUS_WIDTH = 30
-CACTUS_HEIGHT = 50
-BIRD_WIDTH = 40
-BIRD_HEIGHT = 30
-
-# Физика
+DINO_HEIGHT_NORMAL = 60
+DINO_HEIGHT_DUCK = 30
+JUMP_POWER = -14
 GRAVITY = 0.8
-JUMP_STRENGTH = -15
 SPEED = 6
 
+# Параметры Сенсора
+SENSOR_RANGE = 250  # Дальность обзора
+SENSOR_HEIGHT = 100 # Высота зоны сканирования
 
-class Dino:
-    """Класс динозавра"""
-    
+class Dinosaur:
     def __init__(self):
-        self.x = 50
-        self.y = GROUND_Y - DINO_HEIGHT
-        self.width = DINO_WIDTH
-        self.height = DINO_HEIGHT
-        self.velocity_y = 0
+        self.rect = pygame.Rect(DINO_X, GROUND_Y - DINO_HEIGHT_NORMAL, DINO_WIDTH, DINO_HEIGHT_NORMAL)
+        self.vel_y = 0
         self.is_jumping = False
-        self.color = DINO_COLOR
-        
-    def jump(self):
-        """Прыжок (только одинарный - только с земли)"""
-        if not self.is_jumping:
-            self.velocity_y = JUMP_STRENGTH
-            self.is_jumping = True
-            self.color = DINO_JUMP_COLOR
-            
-    def update(self):
-        """Обновление состояния динозавра"""
-        # Применение гравитации
-        self.velocity_y += GRAVITY
-        self.y += self.velocity_y
-        
-        # Проверка земли
-        if self.y >= GROUND_Y - DINO_HEIGHT:
-            self.y = GROUND_Y - DINO_HEIGHT
-            self.velocity_y = 0
-            self.is_jumping = False
-            self.color = DINO_COLOR
-            
-    def draw(self, screen):
-        """Отрисовка динозавра"""
-        pygame.draw.rect(screen, self.color, 
-                        (self.x, self.y, self.width, self.height))
-        # Глаза для визуализации
-        eye_color = WHITE
-        pygame.draw.circle(screen, eye_color, 
-                          (self.x + self.width - 10, self.y + 10), 5)
-        
-    def get_rect(self):
-        """Получить прямоугольник коллизии"""
-        return pygame.Rect(self.x, self.y, self.width, self.height)
+        self.is_ducking = False
+        self.color = BLACK
+        self.on_ground = True
 
+    def jump(self):
+        if self.on_ground:
+            self.vel_y = JUMP_POWER
+            self.is_jumping = True
+            self.on_ground = False
+
+    def duck(self, is_pressed):
+        if is_pressed:
+            if not self.is_jumping: # Приседать можно только на земле
+                if not self.is_ducking:
+                    self.is_ducking = True
+                    self.rect.height = DINO_HEIGHT_DUCK
+                    self.rect.y = GROUND_Y - DINO_HEIGHT_DUCK
+                    self.color = GRAY
+        else:
+            if self.is_ducking:
+                self.is_ducking = False
+                self.rect.height = DINO_HEIGHT_NORMAL
+                self.rect.y = GROUND_Y - DINO_HEIGHT_NORMAL
+                self.color = BLACK
+
+    def update(self):
+        # Гравитация
+        self.vel_y += GRAVITY
+        self.rect.y += self.vel_y
+
+        # Проверка земли
+        if self.rect.y >= GROUND_Y - self.rect.height:
+            self.rect.y = GROUND_Y - self.rect.height
+            self.vel_y = 0
+            self.is_jumping = False
+            self.on_ground = True
+        else:
+            self.on_ground = False
+
+    def draw(self, surface):
+        pygame.draw.rect(surface, self.color, self.rect)
 
 class Obstacle:
-    """Класс препятствия - все препятствия прямоугольники"""
-    
-    def __init__(self, obstacle_type):
-        self.type = obstacle_type
-        self.x = SCREEN_WIDTH
-        self.marked_for_removal = False
-        
-        if obstacle_type == 'cactus':
-            self.width = CACTUS_WIDTH
-            self.height = CACTUS_HEIGHT
-            self.y = GROUND_Y - self.height
-            self.color = CACTUS_COLOR
-        elif obstacle_type == 'bird':
-            self.width = BIRD_WIDTH
-            self.height = BIRD_HEIGHT
-            # Птицы летают на разной высоте (низко - нужно прыгать, высоко - можно пробежать)
-            bird_heights = [GROUND_Y - 40, GROUND_Y - 90]  # Низкая и высокая птица
-            self.y = random.choice(bird_heights)
-            self.color = BIRD_COLOR
-            
-    def update(self, speed):
-        """Обновление позиции препятствия"""
-        self.x -= speed
-        if self.x + self.width < 0:
-            self.marked_for_removal = True
-            
-    def draw(self, screen):
-        """Отрисовка препятствия - простой прямоугольник"""
-        pygame.draw.rect(screen, self.color, 
-                        (self.x, self.y, self.width, self.height))
-                           
-    def get_rect(self):
-        """Получить прямоугольник коллизии"""
-        return pygame.Rect(self.x, self.y, self.width, self.height)
+    def __init__(self, type_):
+        self.type = type_ # 'cactus' или 'bird'
+        self.speed = SPEED
+        self.marked_for_deletion = False
 
+        if self.type == 'cactus':
+            self.width = 30
+            self.height = 50
+            self.x = WIDTH + random.randint(0, 200)
+            self.y = GROUND_Y - self.height
+            self.color = GREEN
+        elif self.type == 'bird':
+            self.width = 40
+            self.height = 30
+            self.x = WIDTH + random.randint(0, 200)
+            # Птица летит на уровне, чтобы можно было прыгнуть ИЛИ присесть
+            # Высота динозавра 60, присед 30.
+            # Пусть птица будет на высоте 35 от земли.
+            # Динозавр (60) заденет её головой. Динозавр (30) пролезет. Динозавр в прыжке перелетит.
+            self.y = GROUND_Y - 45
+            self.color = RED
+
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+
+    def update(self):
+        self.x -= self.speed
+        self.rect.x = int(self.x)
+        if self.x + self.width < 0:
+            self.marked_for_deletion = True
+
+    def draw(self, surface):
+        pygame.draw.rect(surface, self.color, self.rect)
 
 class Sensor:
-    """Сенсорная система для обнаружения препятствий"""
-    
+    """
+    Сенсор сканирует пространство перед динозавром.
+    Возвращает нормализованные данные для нейросети.
+    """
     def __init__(self, dino):
         self.dino = dino
-        self.detection_range = 300
-        
-    def detect_obstacles(self, obstacles):
-        """
-        Обнаружение ближайших препятствий
-        Возвращает информацию о ближайшем препятствии каждого типа
-        """
-        sensor_data = {
-            'cactus_distance': float('inf'),
-            'cactus_height': 0,
-            'bird_distance': float('inf'),
-            'bird_height': 0,
-            'dino_y_velocity': 0,
-            'dino_is_jumping': 0
+        self.range = SENSOR_RANGE
+        self.data = {
+            'dist_cactus': 1.0,   # Нормализованное расстояние до кактуса (0-1)
+            'height_cactus': 0.0, # Относительная высота
+            'dist_bird': 1.0,     # Нормализованное расстояние до птицы
+            'height_bird': 0.0,   # Относительная высота
+            'dino_vel_y': 0.0,    # Скорость динозавра
+            'is_jumping': 0.0     # Флаг прыжка
         }
-        
-        for obstacle in obstacles:
-            distance = obstacle.x - (self.dino.x + self.dino.width)
-            
-            if 0 < distance < self.detection_range:
-                if obstacle.type == 'cactus':
-                    if distance < sensor_data['cactus_distance']:
-                        sensor_data['cactus_distance'] = distance
-                        sensor_data['cactus_height'] = obstacle.height
-                elif obstacle.type == 'bird':
-                    if distance < sensor_data['bird_distance']:
-                        sensor_data['bird_distance'] = distance
-                        sensor_data['bird_height'] = obstacle.y
-                        
-        # Добавляем информацию о состоянии динозавра
-        sensor_data['dino_y_velocity'] = self.dino.velocity_y / JUMP_STRENGTH
-        sensor_data['dino_is_jumping'] = 1 if self.dino.is_jumping else 0
-            
-        # Нормализация данных
-        sensor_data['cactus_distance'] = min(sensor_data['cactus_distance'], 
-                                             self.detection_range) / self.detection_range
-        sensor_data['bird_distance'] = min(sensor_data['bird_distance'], 
-                                           self.detection_range) / self.detection_range
-        sensor_data['cactus_height'] /= GROUND_Y
-        sensor_data['bird_height'] /= GROUND_Y
-        
-        return sensor_data
-    
-    def get_input_vector(self, obstacles):
-        """Преобразование данных сенсора во входной вектор для нейросети"""
-        data = self.detect_obstacles(obstacles)
-        return np.array([
-            data['cactus_distance'],
-            data['cactus_height'],
-            data['bird_distance'],
-            data['bird_height'],
-            data['dino_y_velocity'],
-            data['dino_is_jumping']
-        ])
 
+    def scan(self, obstacles):
+        # Сброс данных по умолчанию (если препятствий нет в радиусе)
+        closest_cactus_dist = self.range
+        closest_bird_dist = self.range
+        cactus_h = 0
+        bird_h = 0
+
+        dino_right = self.dino.rect.right
+
+        for obs in obstacles:
+            dist = obs.rect.left - dino_right
+
+            if 0 < dist < self.range:
+                if obs.type == 'cactus':
+                    if dist < closest_cactus_dist:
+                        closest_cactus_dist = dist
+                        cactus_h = obs.height
+                elif obs.type == 'bird':
+                    if dist < closest_bird_dist:
+                        closest_bird_dist = dist
+                        bird_h = obs.rect.y # Абсолютная Y позиция птицы
+
+        # Нормализация данных (0.0 - очень близко/высоко, 1.0 - далеко/нет препятствия)
+        # Для расстояния: 0 = препятствие вплотную, 1 = за пределами сенсора
+        self.data['dist_cactus'] = min(closest_cactus_dist / self.range, 1.0)
+        self.data['dist_bird'] = min(closest_bird_dist / self.range, 1.0)
+
+        # Для высоты: нормализуем относительно размера динозавра
+        self.data['height_cactus'] = cactus_h / DINO_HEIGHT_NORMAL
+        self.data['height_bird'] = bird_h / HEIGHT
+
+        self.data['dino_vel_y'] = self.dino.vel_y / 15.0 # Примерная макс скорость
+        self.data['is_jumping'] = 1.0 if self.dino.is_jumping else 0.0
+
+        return [
+            self.data['dist_cactus'],
+            self.data['height_cactus'],
+            self.data['dist_bird'],
+            self.data['height_bird'],
+            self.data['dino_vel_y'],
+            self.data['is_jumping']
+        ]
+
+    def draw_debug(self, surface):
+        # Визуализация сенсора (полупрозрачный прямоугольник)
+        sensor_rect = pygame.Rect(self.dino.rect.right, self.dino.rect.top - 20, self.range, self.dino.rect.height + 40)
+        s = pygame.Surface((sensor_rect.width, sensor_rect.height), pygame.SRCALPHA)
+        s.fill((0, 255, 0, 50)) # Зеленый прозрачный
+        surface.blit(s, sensor_rect.topleft)
 
 class NeuralNetwork:
-    """Нейронная сеть для управления динозавром"""
-    
-    def __init__(self, input_size=6, hidden_size=12, output_size=2):
-        """
-        input_size: количество входов (данные сенсора) - 6
-        hidden_size: количество нейронов в скрытом слое
-        output_size: количество выходов (действия: прыжок, ничего)
-        """
+    def __init__(self, input_size=6, hidden_size=8, output_size=2):
+        # Входы: [dist_cactus, h_cactus, dist_bird, h_bird, vel_y, is_jumping]
+        # Выходы: [action_jump, action_duck]
         self.input_size = input_size
         self.hidden_size = hidden_size
         self.output_size = output_size
-        
-        # Инициализация весов
-        self.W1 = np.random.randn(input_size, hidden_size) * 0.5
-        self.b1 = np.zeros((1, hidden_size))
-        self.W2 = np.random.randn(hidden_size, output_size) * 0.5
-        self.b2 = np.zeros((1, output_size))
-        
-    def relu(self, x):
-        """Функция активации ReLU"""
-        return np.maximum(0, x)
-    
-    def softmax(self, x):
-        """Функция активации Softmax"""
-        exp_x = np.exp(x - np.max(x, axis=1, keepdims=True))
-        return exp_x / np.sum(exp_x, axis=1, keepdims=True)
-    
-    def forward(self, X):
-        """Прямое распространение"""
-        if len(X.shape) == 1:
-            X = X.reshape(1, -1)
-        
-        # Скрытый слой
-        self.z1 = np.dot(X, self.W1) + self.b1
-        self.a1 = self.relu(self.z1)
-        
-        # Выходной слой
-        self.z2 = np.dot(self.a1, self.W2) + self.b2
-        self.a2 = self.softmax(self.z2)
-        
-        return self.a2
-    
-    def predict(self, X):
-        """Предсказание действия"""
-        output = self.forward(X)
-        return np.argmax(output, axis=1)[0]
-    
-    def save(self, filename):
-        """Сохранение модели"""
-        model_data = {
-            'W1': self.W1,
-            'b1': self.b1,
-            'W2': self.W2,
-            'b2': self.b2,
-            'input_size': self.input_size,
-            'hidden_size': self.hidden_size,
-            'output_size': self.output_size
-        }
+
+        # Инициализация весов случайными числами
+        self.weights_ih = [[random.uniform(-1, 1) for _ in range(hidden_size)] for _ in range(input_size)]
+        self.weights_ho = [[random.uniform(-1, 1) for _ in range(output_size)] for _ in range(hidden_size)]
+        self.bias_h = [random.uniform(-1, 1) for _ in range(hidden_size)]
+        self.bias_o = [random.uniform(-1, 1) for _ in range(output_size)]
+
+    def sigmoid(self, x):
+        try:
+            return 1 / (1 + math.exp(-x))
+        except OverflowError:
+            return 1.0 if x > 0 else 0.0
+
+    def predict(self, inputs):
+        # Hidden layer
+        hidden = []
+        for j in range(self.hidden_size):
+            sum_val = self.bias_h[j]
+            for i in range(self.input_size):
+                sum_val += inputs[i] * self.weights_ih[i][j]
+            hidden.append(self.sigmoid(sum_val))
+
+        # Output layer
+        outputs = []
+        for k in range(self.output_size):
+            sum_val = self.bias_o[k]
+            for j in range(self.hidden_size):
+                sum_val += hidden[j] * self.weights_ho[j][k]
+            outputs.append(self.sigmoid(sum_val))
+
+        return outputs
+
+    def save(self, filename='dino_nn_model.pkl'):
         with open(filename, 'wb') as f:
-            pickle.dump(model_data, f)
-            
-    def load(self, filename):
-        """Загрузка модели"""
-        with open(filename, 'rb') as f:
-            model_data = pickle.load(f)
-        
-        self.W1 = model_data['W1']
-        self.b1 = model_data['b1']
-        self.W2 = model_data['W2']
-        self.b2 = model_data['b2']
-        self.input_size = model_data['input_size']
-        self.hidden_size = model_data['hidden_size']
-        self.output_size = model_data['output_size']
+            pickle.dump({
+                'weights_ih': self.weights_ih,
+                'weights_ho': self.weights_ho,
+                'bias_h': self.bias_h,
+                'bias_o': self.bias_o
+            }, f)
+        print(f"Model saved to {filename}")
 
+    def load(self, filename='dino_nn_model.pkl'):
+        try:
+            with open(filename, 'rb') as f:
+                data = pickle.load(f)
+                self.weights_ih = data['weights_ih']
+                self.weights_ho = data['weights_ho']
+                self.bias_h = data['bias_h']
+                self.bias_o = data['bias_o']
+            print(f"Model loaded from {filename}")
+            return True
+        except FileNotFoundError:
+            print("No model found. Starting with random weights.")
+            return False
 
-class Trainer:
-    """Класс для обучения нейронной сети"""
-    
-    def __init__(self, nn, learning_rate=0.01):
-        self.nn = nn
-        self.learning_rate = learning_rate
-        
-    def train_step(self, X, y_true):
-        """
-        Один шаг обучения
-        X: входные данные (batch_size, input_size)
-        y_true: правильные действия (batch_size,)
-        """
-        batch_size = X.shape[0]
-        
-        # Прямое распространение
-        output = self.nn.forward(X)
-        
-        # One-hot кодирование правильных ответов
-        y_one_hot = np.zeros_like(output)
-        y_one_hot[np.arange(batch_size), y_true] = 1
-        
-        # Обратное распространение
-        # Градиент выходного слоя
-        dz2 = output - y_one_hot
-        dW2 = np.dot(self.nn.a1.T, dz2) / batch_size
-        db2 = np.mean(dz2, axis=0, keepdims=True)
-        
-        # Градиент скрытого слоя
-        da1 = np.dot(dz2, self.nn.W2.T)
-        dz1 = da1 * (self.nn.z1 > 0)  # Производная ReLU
-        dW1 = np.dot(X.T, dz1) / batch_size
-        db1 = np.mean(dz1, axis=0, keepdims=True)
-        
-        # Обновление весов
-        self.nn.W2 -= self.learning_rate * dW2
-        self.nn.b2 -= self.learning_rate * db2
-        self.nn.W1 -= self.learning_rate * dW1
-        self.nn.b1 -= self.learning_rate * db1
-        
-        # Вычисление потери
-        loss = -np.mean(np.sum(y_one_hot * np.log(output + 1e-10), axis=1))
-        return loss
+def main():
+    dino = Dinosaur()
+    sensor = Sensor(dino)
+    nn = NeuralNetwork()
 
+    # Попытка загрузить модель, если есть
+    nn.load()
 
-class Game:
-    """Основной класс игры"""
-    
-    def __init__(self):
-        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-        pygame.display.set_caption("Dino Game - 2 типа препятствий")
-        self.clock = pygame.time.Clock()
-        self.font = pygame.font.Font(None, 36)
-        self.small_font = pygame.font.Font(None, 24)
-        
-        self.reset_game()
-        
-        # Сенсор и нейронная сеть
-        self.sensor = Sensor(self.dino)
-        self.nn = NeuralNetwork()
-        self.trainer = Trainer(self.nn)
-        
-        # Режимы игры
-        self.auto_mode = False  # Автоматический режим с ИИ
-        self.training_mode = False
-        
-        # Скорость игры
-        self.game_speed = SPEED
-        
-        # Статистика
-        self.generation_data = []
-        
-    def reset_game(self):
-        """Сброс игры"""
-        self.dino = Dino()
-        self.obstacles = []
-        self.score = 0
-        self.game_over = False
-        self.obstacle_timer = 0
-        self.min_obstacle_interval = 60
-        self.max_obstacle_interval = 120
-        self.game_speed = SPEED
-        
-    def spawn_obstacle(self):
-        """Создание случайного препятствия - только кактус и птица"""
-        obstacle_types = ['cactus', 'bird']
-        weights = [0.6, 0.4]  # Вероятности появления
-        
-        obstacle_type = random.choices(obstacle_types, weights=weights)[0]
-        self.obstacles.append(Obstacle(obstacle_type))
-        
-    def check_collision(self):
-        """Проверка столкновений"""
-        dino_rect = self.dino.get_rect()
-        
-        for obstacle in self.obstacles:
-            obs_rect = obstacle.get_rect()
-            
-            # Уменьшаем хитбокс для более честной игры
-            dino_hitbox = dino_rect.inflate(-10, -10)
-            obs_hitbox = obs_rect.inflate(-5, -5)
-            
-            if dino_hitbox.colliderect(obs_hitbox):
-                return True
-        return False
-    
-    def get_optimal_action(self, sensor_data):
-        """
-        Определение оптимального действия на основе данных сенсора
-        Используется для генерации обучающих данных
-        Действия: 0 - ничего не делать, 1 - прыжок
-        """
-        cactus_dist = sensor_data['cactus_distance'] * 300
-        bird_dist = sensor_data['bird_distance'] * 300
-        
-        action = 0
-        
-        # Проверка птицы - нужно прыгать если низко или можно пробежать если высоко
-        if bird_dist < 200 and bird_dist > 0:
-            bird_y = sensor_data['bird_height']
-            if bird_y > GROUND_Y - 60:  # Птица низко - нужно прыгать
-                if not self.dino.is_jumping:
-                    action = 1
-            # Если птица высоко (bird_y < GROUND_Y - 80) - ничего не делаем, пробегаем
-            
-        # Проверка кактуса - нужно прыгать
-        elif cactus_dist < 200 and cactus_dist > 0:
-            if not self.dino.is_jumping:
-                action = 1
-                
-        return action
-    
-    def auto_play(self):
-        """Автоматическое управление с помощью нейронной сети"""
-        sensor_input = self.sensor.get_input_vector(self.obstacles)
-        action = self.nn.predict(sensor_input)
-        
-        if action == 1:  # Прыжок
-            self.dino.jump()
-            
-    def generate_training_data(self, num_samples=1000):
-        """Генерация обучающих данных"""
-        X_data = []
-        y_data = []
-        
-        for _ in range(num_samples):
-            # Создаем случайную ситуацию
-            self.reset_game()
-            
-            # Генерируем случайное препятствие на разном расстоянии (только кактус или птица)
-            obstacle_type = random.choice(['cactus', 'bird'])
-            obstacle = Obstacle(obstacle_type)
-            obstacle.x = random.randint(50, 250)
-            self.obstacles = [obstacle]
-            
-            # Получаем данные сенсора
-            sensor_data = self.sensor.detect_obstacles(self.obstacles)
-            sensor_input = self.sensor.get_input_vector(self.obstacles)
-            
-            # Определяем правильное действие
-            correct_action = self.get_optimal_action(sensor_data)
-            
-            X_data.append(sensor_input)
-            y_data.append(correct_action)
-            
-        return np.array(X_data), np.array(y_data)
-    
-    def train_nn(self, epochs=100, batch_size=32):
-        """Обучение нейронной сети"""
-        print("Генерация обучающих данных...")
-        X_train, y_train = self.generate_training_data(2000)
-        
-        print(f"Обучение нейронной сети ({epochs} эпох)...")
-        
-        for epoch in range(epochs):
-            # Перемешивание данных
-            indices = np.random.permutation(len(X_train))
-            X_train = X_train[indices]
-            y_train = y_train[indices]
-            
-            total_loss = 0
-            batches = 0
-            
-            for i in range(0, len(X_train), batch_size):
-                X_batch = X_train[i:i+batch_size]
-                y_batch = y_train[i:i+batch_size]
-                
-                loss = self.trainer.train_step(X_batch, y_batch)
-                total_loss += loss
-                batches += 1
-                
-            avg_loss = total_loss / batches
-            
-            if (epoch + 1) % 10 == 0:
-                print(f"Эпоха {epoch+1}/{epochs}, Потеря: {avg_loss:.4f}")
-                
-        print("Обучение завершено!")
-        
-        # Сохранение модели
-        self.nn.save('dino_nn_model.pkl')
-        print("Модель сохранена в 'dino_nn_model.pkl'")
-        
-    def test_nn(self, num_games=10):
-        """Тестирование обученной модели"""
-        scores = []
-        
-        for game_num in range(num_games):
-            self.reset_game()
-            game_frames = 0
-            max_frames = 3600  # Максимум 60 секунд на тест
-            
-            while not self.game_over and game_frames < max_frames:
-                self.handle_events()
-                self.auto_play()
-                self.update()
-                self.draw()
-                game_frames += 1
-                
-            scores.append(self.score)
-            print(f"Игра {game_num+1}: Счёт = {self.score}")
-            
-        avg_score = sum(scores) / len(scores)
-        print(f"\nСредний счёт за {num_games} игр: {avg_score:.1f}")
-        return avg_score
-        
-    def handle_events(self):
-        """Обработка событий"""
+    obstacles = []
+    spawn_timer = 0
+    score = 0
+    game_over = False
+    auto_mode = False # Режим автопилота
+
+    running = True
+    while running:
+        clock.tick(FPS)
+
+        # Обработка событий
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return False
-                
+                running = False
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    if self.game_over:
-                        self.reset_game()
+                    if game_over:
+                        # Рестарт игры
+                        dino = Dinosaur()
+                        obstacles = []
+                        score = 0
+                        game_over = False
+                        spawn_timer = 0
                     else:
-                        self.dino.jump()
-                        
-                elif event.key == pygame.K_t:
-                    # Обучение нейронной сети
-                    self.train_nn()
-                    
-                elif event.key == pygame.K_a:
-                    # Переключение автоматического режима
-                    self.auto_mode = not self.auto_mode
-                    print(f"Автоматический режим: {'ВКЛ' if self.auto_mode else 'ВЫКЛ'}")
-                    
-                elif event.key == pygame.K_l:
-                    # Загрузка модели
-                    if os.path.exists('dino_nn_model.pkl'):
-                        self.nn.load('dino_nn_model.pkl')
-                        print("Модель загружена!")
-                    else:
-                        print("Модель не найдена! Сначала обучите сеть (клавиша T)")
-                        
-                elif event.key == pygame.K_r:
-                    # Тестирование модели
-                    if os.path.exists('dino_nn_model.pkl'):
-                        self.nn.load('dino_nn_model.pkl')
-                        self.test_nn()
-                    else:
-                        print("Модель не найдена! Сначала обучите сеть (клавиша T)")
-                        
-        return True
-    
-    def update(self):
-        """Обновление игрового состояния"""
-        if self.game_over:
-            return
-            
-        # Обновление динозавра
-        self.dino.update()
-        
-        # Обновление препятствий
-        for obstacle in self.obstacles:
-            obstacle.update(self.game_speed)
-            
-        # Удаление прошедших препятствий
-        self.obstacles = [obs for obs in self.obstacles if not obs.marked_for_removal]
-        
-        # Создание новых препятствий
-        self.obstacle_timer += 1
-        if self.obstacle_timer >= random.randint(self.min_obstacle_interval, 
-                                                  self.max_obstacle_interval):
-            self.spawn_obstacle()
-            self.obstacle_timer = 0
-            
-        # Увеличение сложности со временем
-        if self.score > 0 and self.score % 500 == 0:
-            self.game_speed = min(6 + self.score // 1000, 12)
-            
-        # Увеличение счёта
-        self.score += 1
-        
-        # Проверка столкновений
-        if self.check_collision():
-            self.game_over = True
-            
-    def draw(self):
-        """Отрисовка игры"""
-        self.screen.fill(WHITE)
-        
-        # Земля
-        pygame.draw.line(self.screen, BLACK, (0, GROUND_Y), 
-                        (SCREEN_WIDTH, GROUND_Y), 2)
-        
-        # Отрисовка препятствий
-        for obstacle in self.obstacles:
-            obstacle.draw(self.screen)
-            
-        # Отрисовка динозавра
-        self.dino.draw(self.screen)
-        
-        # Отрисовка счёта
-        score_text = self.font.render(f"Score: {self.score}", True, TEXT_COLOR)
-        self.screen.blit(score_text, (10, 10))
-        
-        # Отрисовка режима
-        mode_text = self.small_font.render(
-            f"Mode: {'AUTO' if self.auto_mode else 'MANUAL'}", 
-            True, TEXT_COLOR)
-        self.screen.blit(mode_text, (10, 40))
-        
-        # Подсказки по управлению
-        if not self.auto_mode:
-            hints = [
-                "SPACE - Jump",
-                "A - Toggle Auto",
-                "T - Train NN",
-                "L - Load Model",
-                "R - Test Model"
-            ]
-            for i, hint in enumerate(hints):
-                hint_text = self.small_font.render(hint, True, (100, 100, 100))
-                self.screen.blit(hint_text, (SCREEN_WIDTH - 150, 10 + i * 20))
-        
-        # Экран проигрыша
-        if self.game_over:
-            overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
-            overlay.set_alpha(128)
-            overlay.fill(BLACK)
-            self.screen.blit(overlay, (0, 0))
-            
-            game_over_text = self.font.render("GAME OVER", True, WHITE)
-            restart_text = self.small_font.render("Press SPACE to restart", True, WHITE)
-            
-            self.screen.blit(game_over_text, 
-                           (SCREEN_WIDTH//2 - game_over_text.get_width()//2, 
-                            SCREEN_HEIGHT//2 - 30))
-            self.screen.blit(restart_text,
-                           (SCREEN_WIDTH//2 - restart_text.get_width()//2,
-                            SCREEN_HEIGHT//2 + 10))
-        
-        pygame.display.flip()
-        
-    def run(self):
-        """Запуск игрового цикла"""
-        running = True
-        
-        print("=" * 50)
-        print("DINO GAME - 3 типа препятствий")
-        print("=" * 50)
-        print("\nУправление:")
-        print("  SPACE - Прыжок")
-        print("  DOWN/S - Приседание (скольжение)")
-        print("  A - Включить/выключить авто-режим")
-        print("  T - Обучить нейронную сеть")
-        print("  L - Загрузить модель")
-        print("  R - Тестировать модель")
-        print("\nПрепятствия:")
-        print("  Кактус (зелёный) - прыгать")
-        print("  Птица (красная) - прыгать или приседать")
-        print("  Перекладина (серая) - приседать")
-        print("=" * 50)
-        
-        while running:
-            running = self.handle_events()
-            
-            if self.auto_mode and not self.game_over:
-                self.auto_play()
-                
-            self.update()
-            self.draw()
-            self.clock.tick(FPS)
-            
-        pygame.quit()
+                        if not auto_mode:
+                            dino.jump()
 
+                if event.key == pygame.K_a:
+                    auto_mode = not auto_mode
+                    print(f"Auto mode: {auto_mode}")
+
+                if event.key == pygame.K_s and not game_over and not auto_mode:
+                    dino.duck(True)
+
+                if event.key == pygame.K_t:
+                    # Тренировка (упрощенная генерация данных для примера)
+                    print("Training placeholder...")
+                    nn.save()
+
+                if event.key == pygame.K_l:
+                    nn.load()
+
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_s:
+                    dino.duck(False)
+
+        if not game_over:
+            # Логика ИИ
+            if auto_mode:
+                inputs = sensor.scan(obstacles)
+                outputs = nn.predict(inputs)
+
+                # outputs[0] -> Jump, outputs[1] -> Duck
+                if outputs[0] > 0.7: # Порог для прыжка
+                    dino.jump()
+                elif outputs[1] > 0.7: # Порог для приседа
+                    dino.duck(True)
+                else:
+                    dino.duck(False)
+            else:
+                sensor.scan(obstacles) # Просто обновляем сенсор для отладки
+
+            # Спавн препятствий
+            spawn_timer += 1
+            if spawn_timer > random.randint(60, 150):
+                spawn_timer = 0
+                # 70% кактус, 30% птица
+                type_ = 'cactus' if random.random() < 0.7 else 'bird'
+                obstacles.append(Obstacle(type_))
+
+            # Обновление объектов
+            dino.update()
+            for obs in obstacles:
+                obs.update()
+
+            # Удаление старых препятствий
+            obstacles = [obs for obs in obstacles if not obs.marked_for_deletion]
+
+            # Проверка столкновений
+            # Уменьшаем хитбокс для более честной игры (padding)
+            padding = 5
+            dino_hitbox = pygame.Rect(dino.rect.x + padding, dino.rect.y + padding,
+                                      dino.rect.width - 2*padding, dino.rect.height - 2*padding)
+
+            for obs in obstacles:
+                obs_hitbox = pygame.Rect(obs.rect.x + padding, obs.rect.y + padding,
+                                         obs.rect.width - 2*padding, obs.rect.height - 2*padding)
+                if dino_hitbox.colliderect(obs_hitbox):
+                    game_over = True
+
+            score += 0.1
+
+        # Отрисовка
+        screen.fill(WHITE)
+
+        # Земля
+        pygame.draw.line(screen, BLACK, (0, GROUND_Y), (WIDTH, GROUND_Y), 2)
+
+        dino.draw(screen)
+        for obs in obstacles:
+            obs.draw(screen)
+
+        # Отрисовка сенсора (для наглядности)
+        if auto_mode or True: # Всегда рисуем для отладки
+            sensor.draw_debug(screen)
+
+        # Интерфейс
+        score_text = font.render(f"Score: {int(score)}", True, BLACK)
+        screen.blit(score_text, (10, 10))
+
+        mode_text = font.render("AUTO" if auto_mode else "MANUAL", True, BLUE)
+        screen.blit(mode_text, (10, 50))
+
+        info_text = font.render("Space: Jump/Restart | S: Duck | A: Auto | L: Load", True, GRAY)
+        small_font = pygame.font.Font(None, 24)
+        info_surf = small_font.render("Space: Jump/Restart | S: Duck | A: Auto | L: Load", True, GRAY)
+        screen.blit(info_surf, (10, HEIGHT - 30))
+
+        if game_over:
+            over_text = font.render("GAME OVER", True, RED)
+            rect = over_text.get_rect(center=(WIDTH/2, HEIGHT/2))
+            screen.blit(over_text, rect)
+            restart_text = small_font.render("Press SPACE to restart", True, BLACK)
+            rect2 = restart_text.get_rect(center=(WIDTH/2, HEIGHT/2 + 30))
+            screen.blit(restart_text, rect2)
+
+        pygame.display.flip()
+
+    pygame.quit()
+    sys.exit()
 
 if __name__ == "__main__":
-    game = Game()
-    game.run()
+    main()
