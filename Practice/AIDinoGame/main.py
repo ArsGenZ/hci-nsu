@@ -1,40 +1,77 @@
 import pygame
 import random
 import sys
+import torch
+import torch.nn as nn
+import torch.optim as optim
 import pickle
-import math
+import os
 
-# Инициализация Pygame
-pygame.init()
-
-# --- КОНСТАНТЫ ---
+# --- КОНСТАНТЫ И НАСТРОЙКИ ---
 WIDTH, HEIGHT = 800, 400
 FPS = 60
-GROUND_Y = 350  # Уровень земли (Y координата низа)
+GROUND_Y = HEIGHT - 50
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-GRAY = (100, 100, 100)
 RED = (255, 0, 0)
 GREEN = (0, 128, 0)
 BLUE = (0, 0, 255)
-
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Dino Game with Sensor & AI")
-clock = pygame.time.Clock()
-font = pygame.font.Font(None, 36)
+GRAY = (100, 100, 100)
+DINO_COLOR = BLACK
+DUCK_COLOR = (50, 50, 50) # Темно-серый для приседа
+JUMP_COLOR = (0, 100, 255) # Синий для прыжка
 
 # Параметры Динозавра
 DINO_X = 50
 DINO_WIDTH = 40
 DINO_HEIGHT_NORMAL = 60
 DINO_HEIGHT_DUCK = 30
-JUMP_POWER = -14
-GRAVITY = 0.8
-SPEED = 6
+JUMP_POWER = -13
+GRAVITY = 0.6
+MOVE_SPEED = 7
 
-# Параметры Сенсора
-SENSOR_RANGE = 250  # Дальность обзора
-SENSOR_HEIGHT = 100 # Высота зоны сканирования
+# Параметры Препятствий
+CACTUS_WIDTH = 30
+CACTUS_HEIGHT = 50
+BIRD_WIDTH = 40
+BIRD_HEIGHT = 30
+# Высота птицы: должна быть проходимой прыжком или приседом
+# Земля на GROUND_Y. Динозавр стоит на GROUND_Y - 60.
+# Птица летит на уровне "головы" динозавра, чтобы под нее можно было присесть,
+# но если прыгнуть - перелететь её, или если не прыгать - она врежется, если не присесть.
+# Пусть птица летит на высоте 30 пикселей от земли (низко), но динозавр высокий.
+# Логика: Птица летит так, что её нижний край выше присевшего динозавра, но ниже стоящего.
+BIRD_Y_RELATIVE = 25 # Расстояние от земли до низа птицы
+
+# Сенсор
+SENSOR_RANGE = 250
+
+# --- НЕЙРОСЕТЬ (PYTORCH) ---
+class DinoNet(nn.Module):
+    def __init__(self, input_size=6, hidden_size=16, output_size=3):
+        super(DinoNet, self).__init__()
+        self.fc1 = nn.Linear(input_size, hidden_size)
+        self.relu = nn.ReLU()
+        self.fc2 = nn.Linear(hidden_size, output_size)
+
+    def forward(self, x):
+        x = self.fc1(x)
+        x = self.relu(x)
+        x = self.fc2(x)
+        return x
+
+# Глобальные переменные для модели
+model = DinoNet()
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+criterion = nn.CrossEntropyLoss()
+MODEL_PATH = "dino_model_pytorch.pth"
+
+# Действия: 0 = Ничего не делать (или бежать), 1 = Прыжок, 2 = Присед
+ACTION_NONE = 0
+ACTION_JUMP = 1
+ACTION_DUCK = 2
+
+# --- КЛАССЫ ---
 
 class Dinosaur:
     def __init__(self):
@@ -42,43 +79,45 @@ class Dinosaur:
         self.vel_y = 0
         self.is_jumping = False
         self.is_ducking = False
-        self.color = BLACK
-        self.on_ground = True
+        self.color = DINO_COLOR
+        self.original_height = DINO_HEIGHT_NORMAL
 
     def jump(self):
-        if self.on_ground:
+        if not self.is_jumping and not self.is_ducking:
             self.vel_y = JUMP_POWER
             self.is_jumping = True
-            self.on_ground = False
+            self.color = JUMP_COLOR
 
-    def duck(self, is_pressed):
-        if is_pressed:
-            if not self.is_jumping: # Приседать можно только на земле
-                if not self.is_ducking:
-                    self.is_ducking = True
-                    self.rect.height = DINO_HEIGHT_DUCK
-                    self.rect.y = GROUND_Y - DINO_HEIGHT_DUCK
-                    self.color = GRAY
-        else:
+    def duck(self, is_ducking):
+        if self.is_ducking != is_ducking and not self.is_jumping:
+            self.is_ducking = is_ducking
             if self.is_ducking:
-                self.is_ducking = False
+                self.rect.height = DINO_HEIGHT_DUCK
+                self.rect.y = GROUND_Y - DINO_HEIGHT_DUCK
+                self.color = DUCK_COLOR
+            else:
                 self.rect.height = DINO_HEIGHT_NORMAL
                 self.rect.y = GROUND_Y - DINO_HEIGHT_NORMAL
-                self.color = BLACK
+                self.color = DINO_COLOR
 
     def update(self):
         # Гравитация
         self.vel_y += GRAVITY
         self.rect.y += self.vel_y
 
-        # Проверка земли
+        # Приземление
         if self.rect.y >= GROUND_Y - self.rect.height:
             self.rect.y = GROUND_Y - self.rect.height
             self.vel_y = 0
             self.is_jumping = False
-            self.on_ground = True
-        else:
-            self.on_ground = False
+            if not self.is_ducking:
+                self.color = DINO_COLOR
+            else:
+                self.color = DUCK_COLOR
+
+        # Если приседаем в воздухе (редкий кейс, но для надежности)
+        if self.is_ducking and not self.is_jumping:
+             self.rect.y = GROUND_Y - self.rect.height
 
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect)
@@ -86,306 +125,331 @@ class Dinosaur:
 class Obstacle:
     def __init__(self, type_):
         self.type = type_ # 'cactus' или 'bird'
-        self.speed = SPEED
-        self.marked_for_deletion = False
+        self.x = WIDTH + random.randint(0, 100)
 
         if self.type == 'cactus':
-            self.width = 30
-            self.height = 50
-            self.x = WIDTH + random.randint(0, 200)
-            self.y = GROUND_Y - self.height
+            self.rect = pygame.Rect(self.x, GROUND_Y - CACTUS_HEIGHT, CACTUS_WIDTH, CACTUS_HEIGHT)
             self.color = GREEN
+            self.speed = MOVE_SPEED
         elif self.type == 'bird':
-            self.width = 40
-            self.height = 30
-            self.x = WIDTH + random.randint(0, 200)
-            # Птица летит на уровне, чтобы можно было прыгнуть ИЛИ присесть
-            # Высота динозавра 60, присед 30.
-            # Пусть птица будет на высоте 35 от земли.
-            # Динозавр (60) заденет её головой. Динозавр (30) пролезет. Динозавр в прыжке перелетит.
-            self.y = GROUND_Y - 45
+            # Птица летит на фиксированной высоте от земли
+            y_pos = GROUND_Y - BIRD_Y_RELATIVE - BIRD_HEIGHT
+            self.rect = pygame.Rect(self.x, y_pos, BIRD_WIDTH, BIRD_HEIGHT)
             self.color = RED
-
-        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+            self.speed = MOVE_SPEED * 1.2 # Птицы чуть быстрее
 
     def update(self):
         self.x -= self.speed
         self.rect.x = int(self.x)
-        if self.x + self.width < 0:
-            self.marked_for_deletion = True
 
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect)
 
 class Sensor:
-    """
-    Сенсор сканирует пространство перед динозавром.
-    Возвращает нормализованные данные для нейросети.
-    """
     def __init__(self, dino):
         self.dino = dino
-        self.range = SENSOR_RANGE
-        self.data = {
-            'dist_cactus': 1.0,   # Нормализованное расстояние до кактуса (0-1)
-            'height_cactus': 0.0, # Относительная высота
-            'dist_bird': 1.0,     # Нормализованное расстояние до птицы
-            'height_bird': 0.0,   # Относительная высота
-            'dino_vel_y': 0.0,    # Скорость динозавра
-            'is_jumping': 0.0     # Флаг прыжка
-        }
 
     def scan(self, obstacles):
-        # Сброс данных по умолчанию (если препятствий нет в радиусе)
-        closest_cactus_dist = self.range
-        closest_bird_dist = self.range
-        cactus_h = 0
-        bird_h = 0
+        """
+        Возвращает вектор признаков для нейросети:
+        [dist_cactus, height_diff_cactus, dist_bird, height_diff_bird, dy, is_jumping]
+        Все значения нормализуются примерно к [-1, 1] или [0, 1]
+        """
+        dist_cactus = SENSOR_RANGE
+        h_diff_cactus = 0.0
+        dist_bird = SENSOR_RANGE
+        h_diff_bird = 0.0
 
-        dino_right = self.dino.rect.right
-
+        # Ищем ближайшее препятствие каждого типа в диапазоне сенсора
         for obs in obstacles:
-            dist = obs.rect.left - dino_right
+            if obs.x < self.dino.rect.right and obs.x > self.dino.rect.left - SENSOR_RANGE:
+                dist = obs.x - self.dino.rect.right
 
-            if 0 < dist < self.range:
                 if obs.type == 'cactus':
-                    if dist < closest_cactus_dist:
-                        closest_cactus_dist = dist
-                        cactus_h = obs.height
+                    if dist < dist_cactus:
+                        dist_cactus = dist
+                        # Разница высот: центр кактуса относительно центра динозавра
+                        h_diff_cactus = (obs.rect.centery - self.dino.rect.centery) / HEIGHT
+
                 elif obs.type == 'bird':
-                    if dist < closest_bird_dist:
-                        closest_bird_dist = dist
-                        bird_h = obs.rect.y # Абсолютная Y позиция птицы
+                    if dist < dist_bird:
+                        dist_bird = dist
+                        h_diff_bird = (obs.rect.centery - self.dino.rect.centery) / HEIGHT
 
-        # Нормализация данных (0.0 - очень близко/высоко, 1.0 - далеко/нет препятствия)
-        # Для расстояния: 0 = препятствие вплотную, 1 = за пределами сенсора
-        self.data['dist_cactus'] = min(closest_cactus_dist / self.range, 1.0)
-        self.data['dist_bird'] = min(closest_bird_dist / self.range, 1.0)
+        # Нормализация дистанции (0..1 где 1 это далеко)
+        norm_dist_cactus = min(dist_cactus / SENSOR_RANGE, 1.0)
+        norm_dist_bird = min(dist_bird / SENSOR_RANGE, 1.0)
 
-        # Для высоты: нормализуем относительно размера динозавра
-        self.data['height_cactus'] = cactus_h / DINO_HEIGHT_NORMAL
-        self.data['height_bird'] = bird_h / HEIGHT
+        # Скорость по Y нормализуем
+        norm_dy = self.dino.vel_y / abs(JUMP_POWER)
 
-        self.data['dino_vel_y'] = self.dino.vel_y / 15.0 # Примерная макс скорость
-        self.data['is_jumping'] = 1.0 if self.dino.is_jumping else 0.0
+        # Флаг прыжка
+        is_jumping = 1.0 if self.dino.is_jumping else 0.0
 
-        return [
-            self.data['dist_cactus'],
-            self.data['height_cactus'],
-            self.data['dist_bird'],
-            self.data['height_bird'],
-            self.data['dino_vel_y'],
-            self.data['is_jumping']
-        ]
+        # Вектор: [dist_cact, h_cact, dist_bird, h_bird, dy, jump_flag]
+        return [norm_dist_cactus, h_diff_cactus, norm_dist_bird, h_diff_bird, norm_dy, is_jumping]
 
-    def draw_debug(self, surface):
-        # Визуализация сенсора (полупрозрачный прямоугольник)
-        sensor_rect = pygame.Rect(self.dino.rect.right, self.dino.rect.top - 20, self.range, self.dino.rect.height + 40)
-        s = pygame.Surface((sensor_rect.width, sensor_rect.height), pygame.SRCALPHA)
-        s.fill((0, 255, 0, 50)) # Зеленый прозрачный
-        surface.blit(s, sensor_rect.topleft)
+# --- ФУНКЦИИ ИГРЫ ---
 
-class NeuralNetwork:
-    def __init__(self, input_size=6, hidden_size=8, output_size=2):
-        # Входы: [dist_cactus, h_cactus, dist_bird, h_bird, vel_y, is_jumping]
-        # Выходы: [action_jump, action_duck]
-        self.input_size = input_size
-        self.hidden_size = hidden_size
-        self.output_size = output_size
+def get_input_tensor(sensor, obstacles):
+    data = sensor.scan(obstacles)
+    return torch.FloatTensor(data).unsqueeze(0) # Размер [1, 6]
 
-        # Инициализация весов случайными числами
-        self.weights_ih = [[random.uniform(-1, 1) for _ in range(hidden_size)] for _ in range(input_size)]
-        self.weights_ho = [[random.uniform(-1, 1) for _ in range(output_size)] for _ in range(hidden_size)]
-        self.bias_h = [random.uniform(-1, 1) for _ in range(hidden_size)]
-        self.bias_o = [random.uniform(-1, 1) for _ in range(output_size)]
+def generate_training_data(sensor, obstacles, dino):
+    """Генерирует одно правильное действие на основе текущей ситуации"""
+    inputs = sensor.scan(obstacles)
+    target = ACTION_NONE
 
-    def sigmoid(self, x):
-        try:
-            return 1 / (1 + math.exp(-x))
-        except OverflowError:
-            return 1.0 if x > 0 else 0.0
+    dist_cact = inputs[0] * SENSOR_RANGE
+    h_cact = inputs[1]
+    dist_bird = inputs[2] * SENSOR_RANGE
+    h_bird = inputs[3]
 
-    def predict(self, inputs):
-        # Hidden layer
-        hidden = []
-        for j in range(self.hidden_size):
-            sum_val = self.bias_h[j]
-            for i in range(self.input_size):
-                sum_val += inputs[i] * self.weights_ih[i][j]
-            hidden.append(self.sigmoid(sum_val))
+    # Логика принятия решений для учителя (Supervised Learning)
 
-        # Output layer
-        outputs = []
-        for k in range(self.output_size):
-            sum_val = self.bias_o[k]
-            for j in range(self.hidden_size):
-                sum_val += hidden[j] * self.weights_ho[j][k]
-            outputs.append(self.sigmoid(sum_val))
+    # 1. Кактус близко
+    if dist_cact < 120 and dist_cact > 0:
+        if not dino.is_jumping:
+            target = ACTION_JUMP
 
-        return outputs
+    # 2. Птица близко
+    if dist_bird < 120 and dist_bird > 0:
+        # Птица летит низко.
+        # Если мы стоим - нужно присесть (птица заденет голову)
+        # Если мы в воздухе - мы можем перелететь её, но если мы слишком низко - врежемся.
+        # Упрощенная логика: если птица близко и мы не в высоком прыжке -> присесть.
+        # Если мы на земле -> присесть.
+        if not dino.is_jumping or (dino.is_jumping and dino.rect.y > GROUND_Y - 40):
+             target = ACTION_DUCK
+        else:
+             # Если уже высоко прыгнули, ничего не делаем
+             target = ACTION_NONE
 
-    def save(self, filename='dino_nn_model.pkl'):
-        with open(filename, 'wb') as f:
-            pickle.dump({
-                'weights_ih': self.weights_ih,
-                'weights_ho': self.weights_ho,
-                'bias_h': self.bias_h,
-                'bias_o': self.bias_o
-            }, f)
-        print(f"Model saved to {filename}")
+    # Приоритет: если оба близко, кактус опаснее для ног, птица для головы.
+    # Но обычно они не спавнятся в одной точке X.
 
-    def load(self, filename='dino_nn_model.pkl'):
-        try:
-            with open(filename, 'rb') as f:
-                data = pickle.load(f)
-                self.weights_ih = data['weights_ih']
-                self.weights_ho = data['weights_ho']
-                self.bias_h = data['bias_h']
-                self.bias_o = data['bias_o']
-            print(f"Model loaded from {filename}")
-            return True
-        except FileNotFoundError:
-            print("No model found. Starting with random weights.")
-            return False
+    return inputs, target
+
+def train_step(inputs_list, targets_list):
+    if len(inputs_list) == 0:
+        return 0.0
+
+    X = torch.FloatTensor(inputs_list)
+    y = torch.LongTensor(targets_list)
+
+    optimizer.zero_grad()
+    outputs = model(X)
+    loss = criterion(outputs, y)
+    loss.backward()
+    optimizer.step()
+
+    return loss.item()
+
+def save_model():
+    torch.save(model.state_dict(), MODEL_PATH)
+    print("Модель сохранена в", MODEL_PATH)
+
+def load_model():
+    global model
+    if os.path.exists(MODEL_PATH):
+        model.load_state_dict(torch.load(MODEL_PATH))
+        model.eval()
+        print("Модель загружена.")
+        return True
+    else:
+        print("Модель не найдена.")
+        return False
 
 def main():
+    pygame.init()
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("Dino Game (PyTorch AI)")
+    clock = pygame.time.Clock()
+    font = pygame.font.Font(None, 36)
+
     dino = Dinosaur()
     sensor = Sensor(dino)
-    nn = NeuralNetwork()
-
-    # Попытка загрузить модель, если есть
-    nn.load()
-
     obstacles = []
-    spawn_timer = 0
+
     score = 0
     game_over = False
-    auto_mode = False # Режим автопилота
+    auto_play = False
+    training_mode = False # Режим быстрой генерации данных без отрисовки
+
+    spawn_timer = 0
+
+    # Данные для обучения
+    train_inputs = []
+    train_targets = []
 
     running = True
     while running:
-        clock.tick(FPS)
-
-        # Обработка событий
+        # 1. Обработка событий
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
+                if event.key == pygame.K_SPACE or event.key == pygame.K_w:
                     if game_over:
-                        # Рестарт игры
+                        # Рестарт
                         dino = Dinosaur()
                         obstacles = []
                         score = 0
                         game_over = False
-                        spawn_timer = 0
-                    else:
-                        if not auto_mode:
-                            dino.jump()
+                        train_inputs = []
+                        train_targets = []
+                    elif not auto_play and not training_mode:
+                        dino.jump()
+
+                if event.key == pygame.K_s:
+                    if not auto_play and not training_mode and not dino.is_jumping:
+                        dino.duck(True)
 
                 if event.key == pygame.K_a:
-                    auto_mode = not auto_mode
-                    print(f"Auto mode: {auto_mode}")
-
-                if event.key == pygame.K_s and not game_over and not auto_mode:
-                    dino.duck(True)
+                    auto_play = not auto_play
+                    print(f"Автопилот: {'ВКЛ' if auto_play else 'ВЫКЛ'}")
 
                 if event.key == pygame.K_t:
-                    # Тренировка (упрощенная генерация данных для примера)
-                    print("Training placeholder...")
-                    nn.save()
+                    # Запуск быстрого обучения (симуляция)
+                    training_mode = True
+                    print("Начало сбора данных для обучения... (нажмите T снова для остановки и сохранения)")
 
                 if event.key == pygame.K_l:
-                    nn.load()
+                    load_model()
+
+                if event.key == pygame.K_r:
+                    # Тестирование
+                    if load_model():
+                        auto_play = True
+                        print("Запуск тестирования модели...")
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_s:
-                    dino.duck(False)
+                    if not auto_play and not training_mode:
+                        dino.duck(False)
 
+        # 2. Логика игры
         if not game_over:
-            # Логика ИИ
-            if auto_mode:
-                inputs = sensor.scan(obstacles)
-                outputs = nn.predict(inputs)
-
-                # outputs[0] -> Jump, outputs[1] -> Duck
-                if outputs[0] > 0.7: # Порог для прыжка
-                    dino.jump()
-                elif outputs[1] > 0.7: # Порог для приседа
-                    dino.duck(True)
-                else:
-                    dino.duck(False)
-            else:
-                sensor.scan(obstacles) # Просто обновляем сенсор для отладки
-
             # Спавн препятствий
             spawn_timer += 1
-            if spawn_timer > random.randint(60, 150):
+            # Случайный интервал спавна
+            if spawn_timer > random.randint(60, 140):
+                r = random.random()
+                if r < 0.7:
+                    obstacles.append(Obstacle('cactus'))
+                else:
+                    obstacles.append(Obstacle('bird'))
                 spawn_timer = 0
-                # 70% кактус, 30% птица
-                type_ = 'cactus' if random.random() < 0.7 else 'bird'
-                obstacles.append(Obstacle(type_))
 
-            # Обновление объектов
-            dino.update()
-            for obs in obstacles:
+            # Обновление препятствий
+            for obs in obstacles[:]:
                 obs.update()
+                if obs.x < -50:
+                    obstacles.remove(obs)
+                    score += 10
 
-            # Удаление старых препятствий
-            obstacles = [obs for obs in obstacles if not obs.marked_for_deletion]
-
-            # Проверка столкновений
-            # Уменьшаем хитбокс для более честной игры (padding)
-            padding = 5
-            dino_hitbox = pygame.Rect(dino.rect.x + padding, dino.rect.y + padding,
-                                      dino.rect.width - 2*padding, dino.rect.height - 2*padding)
-
-            for obs in obstacles:
+                # Коллизия
+                # Уменьшаем хитбокс для честности (padding)
+                padding = 5
+                dino_hitbox = pygame.Rect(dino.rect.x + padding, dino.rect.y + padding,
+                                          dino.rect.width - 2*padding, dino.rect.height - 2*padding)
                 obs_hitbox = pygame.Rect(obs.rect.x + padding, obs.rect.y + padding,
                                          obs.rect.width - 2*padding, obs.rect.height - 2*padding)
+
                 if dino_hitbox.colliderect(obs_hitbox):
                     game_over = True
+                    if training_mode:
+                        training_mode = False
+                        print("Столкновение! Данные сброшены.")
+                        train_inputs = []
+                        train_targets = []
 
-            score += 0.1
+            # Логика AI / Обучения
+            if auto_play or training_mode:
+                inputs = get_input_tensor(sensor, obstacles)
+                with torch.no_grad():
+                    prediction = model(inputs)
+                    action = torch.argmax(prediction, dim=1).item()
 
-        # Отрисовка
-        screen.fill(WHITE)
+                # Выполнение действия
+                if action == ACTION_JUMP:
+                    if not dino.is_jumping and not dino.is_ducking:
+                        dino.jump()
+                elif action == ACTION_DUCK:
+                    if not dino.is_jumping:
+                        dino.duck(True)
+                    else:
+                        # Если в прыжке и сеть говорит присесть - отпускаем присед (если был)
+                        # Но в нашей логике duck(False) вызывается при отпускании клавиши.
+                        # Здесь просто гарантируем, что мы не застрянем в приседе если это опасно
+                        pass
+                else:
+                    # ACTION_NONE
+                    if not auto_play and not training_mode:
+                         pass # Человек управляет
+                    else:
+                        # AI отпускает присед если он был зажат
+                        if dino.is_ducking:
+                            dino.duck(False)
 
-        # Земля
-        pygame.draw.line(screen, BLACK, (0, GROUND_Y), (WIDTH, GROUND_Y), 2)
+                # Сбор данных для обучения если режим тренировки
+                if training_mode:
+                    inp_list, tgt = generate_training_data(sensor, obstacles, dino)
+                    train_inputs.append(inp_list)
+                    train_targets.append(tgt)
 
-        dino.draw(screen)
-        for obs in obstacles:
-            obs.draw(screen)
+                    # Периодическое обучение батчами
+                    if len(train_inputs) % 50 == 0 and len(train_inputs) > 0:
+                        loss = train_step(train_inputs[-100:], train_targets[-100:]) # Берем последние 100
+                        # print(f"Loss: {loss:.4f}")
 
-        # Отрисовка сенсора (для наглядности)
-        if auto_mode or True: # Всегда рисуем для отладки
-            sensor.draw_debug(screen)
+        # 3. Отрисовка
+        if not training_mode:
+            screen.fill(WHITE)
 
-        # Интерфейс
-        score_text = font.render(f"Score: {int(score)}", True, BLACK)
-        screen.blit(score_text, (10, 10))
+            # Земля
+            pygame.draw.line(screen, BLACK, (0, GROUND_Y), (WIDTH, GROUND_Y), 2)
 
-        mode_text = font.render("AUTO" if auto_mode else "MANUAL", True, BLUE)
-        screen.blit(mode_text, (10, 50))
+            # Сенсор (визуализация)
+            if auto_play:
+                sensor_rect = pygame.Rect(dino.rect.right, dino.rect.y - 50, SENSOR_RANGE, dino.rect.height + 50)
+                pygame.draw.rect(screen, (200, 200, 255), sensor_rect, 1)
 
-        info_text = font.render("Space: Jump/Restart | S: Duck | A: Auto | L: Load", True, GRAY)
-        small_font = pygame.font.Font(None, 24)
-        info_surf = small_font.render("Space: Jump/Restart | S: Duck | A: Auto | L: Load", True, GRAY)
-        screen.blit(info_surf, (10, HEIGHT - 30))
+            dino.draw(screen)
+            for obs in obstacles:
+                obs.draw(screen)
 
-        if game_over:
-            over_text = font.render("GAME OVER", True, RED)
-            rect = over_text.get_rect(center=(WIDTH/2, HEIGHT/2))
-            screen.blit(over_text, rect)
-            restart_text = small_font.render("Press SPACE to restart", True, BLACK)
-            rect2 = restart_text.get_rect(center=(WIDTH/2, HEIGHT/2 + 30))
-            screen.blit(restart_text, rect2)
+            # Счет
+            score_text = font.render(f"Score: {score}", True, BLACK)
+            screen.blit(score_text, (10, 10))
 
-        pygame.display.flip()
+            status_text = ""
+            if auto_play: status_text = "Mode: AI (PyTorch)"
+            elif training_mode: status_text = "Mode: Training..."
+            else: status_text = "Mode: Manual"
+
+            mode_surf = font.render(status_text, True, BLUE)
+            screen.blit(mode_surf, (10, 50))
+
+            if game_over:
+                over_text = font.render("GAME OVER (Press SPACE)", True, RED)
+                screen.blit(over_text, (WIDTH//2 - 150, HEIGHT//2))
+
+            pygame.display.flip()
+        else:
+            # В режиме тренировки можно не отрисовывать каждый кадр для скорости,
+            # но для наглядности оставим отрисовку, просто игра идет сама.
+            pass
+
+        clock.tick(FPS)
 
     pygame.quit()
     sys.exit()
 
 if __name__ == "__main__":
+    # Попытка загрузить модель при старте (опционально)
+    if os.path.exists(MODEL_PATH):
+        load_model()
+
     main()
