@@ -18,22 +18,18 @@ GROUND_Y = 350
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 DINO_COLOR = (50, 50, 50)
-DINO_SLIDE_COLOR = (0, 100, 200)  # Синий для скольжения
+DINO_JUMP_COLOR = (100, 100, 200)  # Синий для прыжка
 CACTUS_COLOR = (0, 150, 0)
 BIRD_COLOR = (150, 50, 50)
-BAR_COLOR = (100, 100, 100)
 TEXT_COLOR = (50, 50, 50)
 
 # Размеры
 DINO_WIDTH = 40
 DINO_HEIGHT = 60
-DINO_SLIDE_HEIGHT = 30
 CACTUS_WIDTH = 30
 CACTUS_HEIGHT = 50
 BIRD_WIDTH = 40
 BIRD_HEIGHT = 30
-BAR_WIDTH = 80
-BAR_HEIGHT = 15
 
 # Физика
 GRAVITY = 0.8
@@ -51,26 +47,14 @@ class Dino:
         self.height = DINO_HEIGHT
         self.velocity_y = 0
         self.is_jumping = False
-        self.is_sliding = False
-        self.slide_timer = 0
         self.color = DINO_COLOR
         
     def jump(self):
-        """Прыжок (только одинарный)"""
+        """Прыжок (только одинарный - только с земли)"""
         if not self.is_jumping:
             self.velocity_y = JUMP_STRENGTH
             self.is_jumping = True
-            self.color = DINO_COLOR
-        # Двойной прыжок отключён - прыжок возможен только с земли
-            
-    def slide(self):
-        """Приседание/скольжение"""
-        if not self.is_sliding and not self.is_jumping:
-            self.is_sliding = True
-            self.height = DINO_SLIDE_HEIGHT
-            self.y = GROUND_Y - DINO_SLIDE_HEIGHT
-            self.color = DINO_SLIDE_COLOR
-            self.slide_timer = 30  # Длительность скольжения в кадрах
+            self.color = DINO_JUMP_COLOR
             
     def update(self):
         """Обновление состояния динозавра"""
@@ -79,30 +63,18 @@ class Dino:
         self.y += self.velocity_y
         
         # Проверка земли
-        if self.is_sliding:
-            ground_y = GROUND_Y - DINO_SLIDE_HEIGHT
-            if self.y >= ground_y:
-                self.y = ground_y
-                self.velocity_y = 0
-                self.slide_timer -= 1
-                if self.slide_timer <= 0:
-                    self.is_sliding = False
-                    self.height = DINO_HEIGHT
-                    self.y = GROUND_Y - DINO_HEIGHT
-                    self.color = DINO_COLOR
-        else:
-            if self.y >= GROUND_Y - DINO_HEIGHT:
-                self.y = GROUND_Y - DINO_HEIGHT
-                self.velocity_y = 0
-                self.is_jumping = False
-                self.color = DINO_COLOR
-                
+        if self.y >= GROUND_Y - DINO_HEIGHT:
+            self.y = GROUND_Y - DINO_HEIGHT
+            self.velocity_y = 0
+            self.is_jumping = False
+            self.color = DINO_COLOR
+            
     def draw(self, screen):
         """Отрисовка динозавра"""
         pygame.draw.rect(screen, self.color, 
                         (self.x, self.y, self.width, self.height))
         # Глаза для визуализации
-        eye_color = WHITE if self.color == DINO_SLIDE_COLOR else BLACK
+        eye_color = WHITE
         pygame.draw.circle(screen, eye_color, 
                           (self.x + self.width - 10, self.y + 10), 5)
         
@@ -112,7 +84,7 @@ class Dino:
 
 
 class Obstacle:
-    """Базовый класс препятствия"""
+    """Класс препятствия - все препятствия прямоугольники"""
     
     def __init__(self, obstacle_type):
         self.type = obstacle_type
@@ -127,15 +99,10 @@ class Obstacle:
         elif obstacle_type == 'bird':
             self.width = BIRD_WIDTH
             self.height = BIRD_HEIGHT
-            # Птицы летают на разной высоте
-            self.y = GROUND_Y - random.randint(70, 120)
+            # Птицы летают на разной высоте (низко - нужно прыгать, высоко - можно пробежать)
+            bird_heights = [GROUND_Y - 40, GROUND_Y - 90]  # Низкая и высокая птица
+            self.y = random.choice(bird_heights)
             self.color = BIRD_COLOR
-        elif obstacle_type == 'bar':
-            self.width = BAR_WIDTH
-            self.height = BAR_HEIGHT
-            # Низкая перекладина на уровне груди динозавра
-            self.y = GROUND_Y - 45
-            self.color = BAR_COLOR
             
     def update(self, speed):
         """Обновление позиции препятствия"""
@@ -144,36 +111,9 @@ class Obstacle:
             self.marked_for_removal = True
             
     def draw(self, screen):
-        """Отрисовка препятствия"""
-        if self.type == 'cactus':
-            # Рисуем кактус (прямоугольник с шипами)
-            pygame.draw.rect(screen, self.color, 
-                           (self.x, self.y, self.width, self.height))
-            # Шипы сверху
-            spike_w = 8
-            for i in range(3):
-                sx = self.x + 5 + i * spike_w
-                pygame.draw.polygon(screen, self.color,
-                                  [(sx, self.y), (sx + spike_w//2, self.y - 10), 
-                                   (sx + spike_w, self.y)])
-        elif self.type == 'bird':
-            # Рисуем птицу (эллипс с крыльями)
-            pygame.draw.ellipse(screen, self.color,
-                              (self.x, self.y, self.width, self.height))
-            # Крыло
-            pygame.draw.polygon(screen, self.color,
-                              [(self.x + 10, self.y + 10),
-                               (self.x + 25, self.y - 5),
-                               (self.x + 40, self.y + 10)])
-        elif self.type == 'bar':
-            # Рисуем перекладину
-            pygame.draw.rect(screen, self.color,
-                           (self.x, self.y, self.width, self.height))
-            # Опоры по бокам
-            pygame.draw.rect(screen, self.color,
-                           (self.x, self.y, 10, GROUND_Y - self.y))
-            pygame.draw.rect(screen, self.color,
-                           (self.x + self.width - 10, self.y, 10, GROUND_Y - self.y))
+        """Отрисовка препятствия - простой прямоугольник"""
+        pygame.draw.rect(screen, self.color, 
+                        (self.x, self.y, self.width, self.height))
                            
     def get_rect(self):
         """Получить прямоугольник коллизии"""
@@ -197,10 +137,8 @@ class Sensor:
             'cactus_height': 0,
             'bird_distance': float('inf'),
             'bird_height': 0,
-            'bar_distance': float('inf'),
-            'bar_height': 0,
             'dino_y_velocity': 0,
-            'dino_state': 0  # 0 - стоит, 1 - прыгает, 2 - приседает
+            'dino_is_jumping': 0
         }
         
         for obstacle in obstacles:
@@ -215,28 +153,18 @@ class Sensor:
                     if distance < sensor_data['bird_distance']:
                         sensor_data['bird_distance'] = distance
                         sensor_data['bird_height'] = obstacle.y
-                elif obstacle.type == 'bar':
-                    if distance < sensor_data['bar_distance']:
-                        sensor_data['bar_distance'] = distance
-                        sensor_data['bar_height'] = obstacle.y
                         
         # Добавляем информацию о состоянии динозавра
         sensor_data['dino_y_velocity'] = self.dino.velocity_y / JUMP_STRENGTH
-        if self.dino.is_jumping:
-            sensor_data['dino_state'] = 1
-        elif self.dino.is_sliding:
-            sensor_data['dino_state'] = 2
+        sensor_data['dino_is_jumping'] = 1 if self.dino.is_jumping else 0
             
         # Нормализация данных
         sensor_data['cactus_distance'] = min(sensor_data['cactus_distance'], 
                                              self.detection_range) / self.detection_range
         sensor_data['bird_distance'] = min(sensor_data['bird_distance'], 
                                            self.detection_range) / self.detection_range
-        sensor_data['bar_distance'] = min(sensor_data['bar_distance'], 
-                                          self.detection_range) / self.detection_range
         sensor_data['cactus_height'] /= GROUND_Y
         sensor_data['bird_height'] /= GROUND_Y
-        sensor_data['bar_height'] /= GROUND_Y
         
         return sensor_data
     
@@ -248,21 +176,19 @@ class Sensor:
             data['cactus_height'],
             data['bird_distance'],
             data['bird_height'],
-            data['bar_distance'],
-            data['bar_height'],
             data['dino_y_velocity'],
-            data['dino_state']
+            data['dino_is_jumping']
         ])
 
 
 class NeuralNetwork:
     """Нейронная сеть для управления динозавром"""
     
-    def __init__(self, input_size=8, hidden_size=16, output_size=3):
+    def __init__(self, input_size=6, hidden_size=12, output_size=2):
         """
-        input_size: количество входов (данные сенсора)
+        input_size: количество входов (данные сенсора) - 6
         hidden_size: количество нейронов в скрытом слое
-        output_size: количество выходов (действия: прыжок, приседание, ничего)
+        output_size: количество выходов (действия: прыжок, ничего)
         """
         self.input_size = input_size
         self.hidden_size = hidden_size
@@ -381,7 +307,7 @@ class Game:
     
     def __init__(self):
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-        pygame.display.set_caption("Dino Game - 3 типа препятствий")
+        pygame.display.set_caption("Dino Game - 2 типа препятствий")
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(None, 36)
         self.small_font = pygame.font.Font(None, 24)
@@ -415,9 +341,9 @@ class Game:
         self.game_speed = SPEED
         
     def spawn_obstacle(self):
-        """Создание случайного препятствия"""
-        obstacle_types = ['cactus', 'bird', 'bar']
-        weights = [0.5, 0.3, 0.2]  # Вероятности появления
+        """Создание случайного препятствия - только кактус и птица"""
+        obstacle_types = ['cactus', 'bird']
+        weights = [0.6, 0.4]  # Вероятности появления
         
         obstacle_type = random.choices(obstacle_types, weights=weights)[0]
         self.obstacles.append(Obstacle(obstacle_type))
@@ -441,35 +367,21 @@ class Game:
         """
         Определение оптимального действия на основе данных сенсора
         Используется для генерации обучающих данных
+        Действия: 0 - ничего не делать, 1 - прыжок
         """
         cactus_dist = sensor_data['cactus_distance'] * 300
         bird_dist = sensor_data['bird_distance'] * 300
-        bar_dist = sensor_data['bar_distance'] * 300
-        
-        # Приоритеты действий
-        # 0 - ничего не делать
-        # 1 - прыжок
-        # 2 - приседание
         
         action = 0
         
-        # Проверка перекладины - нужно приседать (высший приоритет)
-        if bar_dist < 200 and bar_dist > 0:
-            if not self.dino.is_sliding and not self.dino.is_jumping:
-                action = 2
-                
-        # Проверка птицы - нужно приседать или прыгать в зависимости от высоты
-        elif bird_dist < 200 and bird_dist > 0:
-            bird_y = sensor_data['bird_height'] * GROUND_Y
-            if bird_y < GROUND_Y - 80:  # Птица высоко - можно пробежать
-                action = 0
-            elif bird_y > GROUND_Y - 50:  # Птица низко - нужно приседать
-                if not self.dino.is_sliding and not self.dino.is_jumping:
-                    action = 2
-            else:  # Птица на средней высоте - прыгать
+        # Проверка птицы - нужно прыгать если низко или можно пробежать если высоко
+        if bird_dist < 200 and bird_dist > 0:
+            bird_y = sensor_data['bird_height']
+            if bird_y > GROUND_Y - 60:  # Птица низко - нужно прыгать
                 if not self.dino.is_jumping:
                     action = 1
-                    
+            # Если птица высоко (bird_y < GROUND_Y - 80) - ничего не делаем, пробегаем
+            
         # Проверка кактуса - нужно прыгать
         elif cactus_dist < 200 and cactus_dist > 0:
             if not self.dino.is_jumping:
@@ -484,8 +396,6 @@ class Game:
         
         if action == 1:  # Прыжок
             self.dino.jump()
-        elif action == 2:  # Приседание
-            self.dino.slide()
             
     def generate_training_data(self, num_samples=1000):
         """Генерация обучающих данных"""
@@ -496,8 +406,8 @@ class Game:
             # Создаем случайную ситуацию
             self.reset_game()
             
-            # Генерируем случайное препятствие на разном расстоянии
-            obstacle_type = random.choice(['cactus', 'bird', 'bar'])
+            # Генерируем случайное препятствие на разном расстоянии (только кактус или птица)
+            obstacle_type = random.choice(['cactus', 'bird'])
             obstacle = Obstacle(obstacle_type)
             obstacle.x = random.randint(50, 250)
             self.obstacles = [obstacle]
@@ -584,10 +494,6 @@ class Game:
                         self.reset_game()
                     else:
                         self.dino.jump()
-                        
-                elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
-                    if not self.game_over:
-                        self.dino.slide()
                         
                 elif event.key == pygame.K_t:
                     # Обучение нейронной сети
@@ -678,7 +584,6 @@ class Game:
         if not self.auto_mode:
             hints = [
                 "SPACE - Jump",
-                "DOWN/S - Slide",
                 "A - Toggle Auto",
                 "T - Train NN",
                 "L - Load Model",
