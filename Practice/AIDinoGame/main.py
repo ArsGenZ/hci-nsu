@@ -199,7 +199,8 @@ class Sensor:
 
         # Ищем ближайшее препятствие каждого типа в диапазоне сенсора
         for obs in obstacles:
-            if obs.x < self.dino.rect.right and obs.x > self.dino.rect.left - SENSOR_RANGE:
+            # Препятствие должно быть справа от динозавра (приближается) и в пределах SENSOR_RANGE
+            if obs.x > self.dino.rect.right and obs.x < self.dino.rect.right + SENSOR_RANGE:
                 dist = obs.x - self.dino.rect.right
 
                 if obs.type == 'cactus':
@@ -250,36 +251,50 @@ def generate_training_data(sensor, obstacles, dino):
     dist_bird = inputs[2] * SENSOR_RANGE
     h_bird = inputs[3]
     dist_gap = inputs[4] * SENSOR_RANGE
+    
+    # Пороги расстояний для реакции (только близкие препятствия требуют действия)
+    GAP_THRESHOLD = 180
+    CACTUS_THRESHOLD = 150
+    BIRD_THRESHOLD = 150
+    
+    # Минимальное расстояние для начала действия (должно быть достаточно рано для реакции)
+    MIN_GAP_DIST = 50
+    MIN_CACTUS_DIST = 40
+    MIN_BIRD_DIST = 40
+    
+    # Флаг, что решение уже принято (для приоритетов)
+    decision_made = False
 
-    # Логика принятия решений для учителя (Supervised Learning)
-
-    # 1. Пропасть близко - нужен двойной прыжок
-    if dist_gap < 150 and dist_gap > 0:
+    # 1. Пропасть близко - самый высокий приоритет
+    if MIN_GAP_DIST < dist_gap < GAP_THRESHOLD and not decision_made:
         if not dino.is_jumping:
             target = ACTION_JUMP  # Сначала обычный прыжок
-        elif dino.can_double_jump and dino.jump_count < 2:
+            decision_made = True
+        elif dino.is_jumping and dino.can_double_jump and dino.jump_count < 2:
             target = ACTION_DOUBLE_JUMP  # Затем двойной прыжок
+            decision_made = True
 
-    # 2. Кактус близко
-    if dist_cact < 120 and dist_cact > 0:
+    # 2. Кактус близко (только если еще не решили для пропасти)
+    if MIN_CACTUS_DIST < dist_cact < CACTUS_THRESHOLD and not decision_made:
         if not dino.is_jumping:
             target = ACTION_JUMP
+            decision_made = True
 
-    # 3. Птица близко
-    if dist_bird < 120 and dist_bird > 0:
-        # Птица летит низко.
-        # Если мы стоим - нужно присесть (птица заденет голову)
-        # Если мы в воздухе - мы можем перелететь её, но если мы слишком низко - врежемся.
-        # Упрощенная логика: если птица близко и мы не в высоком прыжке -> присесть.
-        # Если мы на земле -> присесть.
-        if not dino.is_jumping or (dino.is_jumping and dino.rect.y > GROUND_Y - 40):
-             target = ACTION_DUCK
-        else:
-             # Если уже высоко прыгнули, ничего не делаем
-             target = ACTION_NONE
+    # 3. Птица близко (только если еще не решили для пропасти/кактуса)
+    if MIN_BIRD_DIST < dist_bird < BIRD_THRESHOLD and not decision_made:
+        # Птица летит низко - нужно присесть если стоим на земле
+        if not dino.is_jumping:
+            target = ACTION_DUCK
+            decision_made = True
+        # Если уже прыгнули достаточно высоко - ничего не делаем (перелетим)
+        elif dino.rect.y < GROUND_Y - 40:
+            target = ACTION_NONE
+            decision_made = True
 
-    # Приоритет: пропасть > кактус > птица
-    # Если пропасть и кактус рядом, приоритет пропасти (двойной прыжок поможет и кактус перепрыгнуть)
+    # ГЛАВНОЕ ИЗМЕНЕНИЕ: Возвращаем ACTION_NONE если нет препятствий в зоне реакции
+    # Это предотвратит обучение нейросети постоянным прыжкам
+    if not decision_made:
+        target = ACTION_NONE
 
     return inputs, target
 
