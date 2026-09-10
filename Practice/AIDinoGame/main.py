@@ -56,15 +56,12 @@ class Dino:
         self.color = DINO_COLOR
         
     def jump(self):
-        """Прыжок (одинарный или двойной)"""
+        """Прыжок (только одинарный)"""
         if not self.is_jumping:
             self.velocity_y = JUMP_STRENGTH
             self.is_jumping = True
             self.color = DINO_COLOR
-        elif self.is_jumping and self.velocity_y > 0:
-            # Двойной прыжок доступен только при падении
-            self.velocity_y = JUMP_STRENGTH * 0.8
-            self.color = (0, 150, 255)  # Голубой для двойного прыжка
+        # Двойной прыжок отключён - прыжок возможен только с земли
             
     def slide(self):
         """Приседание/скольжение"""
