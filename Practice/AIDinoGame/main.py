@@ -20,6 +20,8 @@ GRAY = (100, 100, 100)
 DINO_COLOR = BLACK
 DUCK_COLOR = (50, 50, 50) # Темно-серый для приседа
 JUMP_COLOR = (0, 100, 255) # Синий для прыжка
+DOUBLE_JUMP_COLOR = (0, 200, 255) # Голубой для двойного прыжка
+GAP_COLOR = (139, 69, 19) # Коричневый для пропасти
 
 # Параметры Динозавра
 DINO_X = 50
@@ -29,6 +31,7 @@ DINO_HEIGHT_DUCK = 30
 JUMP_POWER = -13
 GRAVITY = 0.6
 MOVE_SPEED = 7
+DOUBLE_JUMP_AVAILABLE = True  # Флаг доступности двойного прыжка
 
 # Параметры Препятствий
 CACTUS_WIDTH = 30
@@ -43,12 +46,16 @@ BIRD_HEIGHT = 30
 # Логика: Птица летит так, что её нижний край выше присевшего динозавра, но ниже стоящего.
 BIRD_Y_RELATIVE = 25 # Расстояние от земли до низа птицы
 
+# Параметры пропасти (Gap)
+GAP_WIDTH = 100
+GAP_DEPTH = 20  # Визуальная глубина пропасти
+
 # Сенсор
 SENSOR_RANGE = 250
 
 # --- НЕЙРОСЕТЬ (PYTORCH) ---
 class DinoNet(nn.Module):
-    def __init__(self, input_size=6, hidden_size=16, output_size=3):
+    def __init__(self, input_size=8, hidden_size=20, output_size=4):
         super(DinoNet, self).__init__()
         self.fc1 = nn.Linear(input_size, hidden_size)
         self.relu = nn.ReLU()
@@ -66,10 +73,11 @@ optimizer = optim.Adam(model.parameters(), lr=0.001)
 criterion = nn.CrossEntropyLoss()
 MODEL_PATH = "dino_model_pytorch.pth"
 
-# Действия: 0 = Ничего не делать (или бежать), 1 = Прыжок, 2 = Присед
+# Действия: 0 = Ничего не делать (или бежать), 1 = Прыжок, 2 = Присед, 3 = Двойной прыжок
 ACTION_NONE = 0
 ACTION_JUMP = 1
 ACTION_DUCK = 2
+ACTION_DOUBLE_JUMP = 3
 
 # --- КЛАССЫ ---
 
@@ -81,12 +89,24 @@ class Dinosaur:
         self.is_ducking = False
         self.color = DINO_COLOR
         self.original_height = DINO_HEIGHT_NORMAL
+        self.can_double_jump = False  # Разрешение на двойной прыжок
+        self.jump_count = 0  # Счетчик прыжков
 
     def jump(self):
         if not self.is_jumping and not self.is_ducking:
             self.vel_y = JUMP_POWER
             self.is_jumping = True
             self.color = JUMP_COLOR
+            self.jump_count = 1
+
+    def double_jump(self):
+        """Выполняет двойной прыжок если доступен"""
+        if self.is_jumping and not self.is_ducking and self.can_double_jump and self.jump_count < 2:
+            self.vel_y = JUMP_POWER * 0.85  # Второй прыжок чуть слабее первого
+            self.color = DOUBLE_JUMP_COLOR
+            self.jump_count = 2
+            return True
+        return False
 
     def duck(self, is_ducking):
         if self.is_ducking != is_ducking and not self.is_jumping:
@@ -100,20 +120,27 @@ class Dinosaur:
                 self.rect.y = GROUND_Y - DINO_HEIGHT_NORMAL
                 self.color = DINO_COLOR
 
-    def update(self):
+    def update(self, over_gap=False):
         # Гравитация
         self.vel_y += GRAVITY
         self.rect.y += self.vel_y
 
-        # Приземление
-        if self.rect.y >= GROUND_Y - self.rect.height:
+        # Приземление (только если не над пропастью)
+        if not over_gap and self.rect.y >= GROUND_Y - self.rect.height:
             self.rect.y = GROUND_Y - self.rect.height
             self.vel_y = 0
             self.is_jumping = False
+            self.jump_count = 0
+            self.can_double_jump = False
             if not self.is_ducking:
                 self.color = DINO_COLOR
             else:
                 self.color = DUCK_COLOR
+        elif over_gap:
+            # Над пропастью - динозавр в воздухе, разрешаем двойной прыжок
+            if not self.is_jumping:
+                self.is_jumping = True
+            self.can_double_jump = True
 
         # Если приседаем в воздухе (редкий кейс, но для надежности)
         if self.is_ducking and not self.is_jumping:
@@ -124,7 +151,7 @@ class Dinosaur:
 
 class Obstacle:
     def __init__(self, type_):
-        self.type = type_ # 'cactus' или 'bird'
+        self.type = type_ # 'cactus', 'bird' или 'gap'
         self.x = WIDTH + random.randint(0, 100)
 
         if self.type == 'cactus':
@@ -137,13 +164,22 @@ class Obstacle:
             self.rect = pygame.Rect(self.x, y_pos, BIRD_WIDTH, BIRD_HEIGHT)
             self.color = RED
             self.speed = MOVE_SPEED * 1.2 # Птицы чуть быстрее
+        elif self.type == 'gap':
+            # Пропасть - это разрыв в земле
+            self.rect = pygame.Rect(self.x, GROUND_Y, GAP_WIDTH, GAP_DEPTH)
+            self.color = GAP_COLOR
+            self.speed = MOVE_SPEED
 
     def update(self):
         self.x -= self.speed
         self.rect.x = int(self.x)
 
     def draw(self, surface):
-        pygame.draw.rect(surface, self.color, self.rect)
+        if self.type == 'gap':
+            # Рисуем пропасть как коричневый прямоугольник под землей
+            pygame.draw.rect(surface, self.color, self.rect)
+        else:
+            pygame.draw.rect(surface, self.color, self.rect)
 
 class Sensor:
     def __init__(self, dino):
@@ -152,13 +188,14 @@ class Sensor:
     def scan(self, obstacles):
         """
         Возвращает вектор признаков для нейросети:
-        [dist_cactus, height_diff_cactus, dist_bird, height_diff_bird, dy, is_jumping]
+        [dist_cactus, height_diff_cactus, dist_bird, height_diff_bird, dist_gap, dy, is_jumping, can_double_jump]
         Все значения нормализуются примерно к [-1, 1] или [0, 1]
         """
         dist_cactus = SENSOR_RANGE
         h_diff_cactus = 0.0
         dist_bird = SENSOR_RANGE
         h_diff_bird = 0.0
+        dist_gap = SENSOR_RANGE
 
         # Ищем ближайшее препятствие каждого типа в диапазоне сенсора
         for obs in obstacles:
@@ -175,25 +212,33 @@ class Sensor:
                     if dist < dist_bird:
                         dist_bird = dist
                         h_diff_bird = (obs.rect.centery - self.dino.rect.centery) / HEIGHT
+                
+                elif obs.type == 'gap':
+                    if dist < dist_gap:
+                        dist_gap = dist
 
         # Нормализация дистанции (0..1 где 1 это далеко)
         norm_dist_cactus = min(dist_cactus / SENSOR_RANGE, 1.0)
         norm_dist_bird = min(dist_bird / SENSOR_RANGE, 1.0)
+        norm_dist_gap = min(dist_gap / SENSOR_RANGE, 1.0)
 
         # Скорость по Y нормализуем
         norm_dy = self.dino.vel_y / abs(JUMP_POWER)
 
         # Флаг прыжка
         is_jumping = 1.0 if self.dino.is_jumping else 0.0
+        
+        # Флаг доступности двойного прыжка
+        can_double_jump = 1.0 if self.dino.can_double_jump else 0.0
 
-        # Вектор: [dist_cact, h_cact, dist_bird, h_bird, dy, jump_flag]
-        return [norm_dist_cactus, h_diff_cactus, norm_dist_bird, h_diff_bird, norm_dy, is_jumping]
+        # Вектор: [dist_cact, h_cact, dist_bird, h_bird, dist_gap, dy, jump_flag, double_jump_flag]
+        return [norm_dist_cactus, h_diff_cactus, norm_dist_bird, h_diff_bird, norm_dist_gap, norm_dy, is_jumping, can_double_jump]
 
 # --- ФУНКЦИИ ИГРЫ ---
 
 def get_input_tensor(sensor, obstacles):
     data = sensor.scan(obstacles)
-    return torch.FloatTensor(data).unsqueeze(0) # Размер [1, 6]
+    return torch.FloatTensor(data).unsqueeze(0) # Размер [1, 8]
 
 def generate_training_data(sensor, obstacles, dino):
     """Генерирует одно правильное действие на основе текущей ситуации"""
@@ -204,15 +249,23 @@ def generate_training_data(sensor, obstacles, dino):
     h_cact = inputs[1]
     dist_bird = inputs[2] * SENSOR_RANGE
     h_bird = inputs[3]
+    dist_gap = inputs[4] * SENSOR_RANGE
 
     # Логика принятия решений для учителя (Supervised Learning)
 
-    # 1. Кактус близко
+    # 1. Пропасть близко - нужен двойной прыжок
+    if dist_gap < 150 and dist_gap > 0:
+        if not dino.is_jumping:
+            target = ACTION_JUMP  # Сначала обычный прыжок
+        elif dino.can_double_jump and dino.jump_count < 2:
+            target = ACTION_DOUBLE_JUMP  # Затем двойной прыжок
+
+    # 2. Кактус близко
     if dist_cact < 120 and dist_cact > 0:
         if not dino.is_jumping:
             target = ACTION_JUMP
 
-    # 2. Птица близко
+    # 3. Птица близко
     if dist_bird < 120 and dist_bird > 0:
         # Птица летит низко.
         # Если мы стоим - нужно присесть (птица заденет голову)
@@ -225,8 +278,8 @@ def generate_training_data(sensor, obstacles, dino):
              # Если уже высоко прыгнули, ничего не делаем
              target = ACTION_NONE
 
-    # Приоритет: если оба близко, кактус опаснее для ног, птица для головы.
-    # Но обычно они не спавнятся в одной точке X.
+    # Приоритет: пропасть > кактус > птица
+    # Если пропасть и кактус рядом, приоритет пропасти (двойной прыжок поможет и кактус перепрыгнуть)
 
     return inputs, target
 
@@ -306,14 +359,28 @@ def main():
                     if not auto_play and not training_mode and not dino.is_jumping:
                         dino.duck(True)
 
+                if event.key == pygame.K_d:
+                    # Двойной прыжок по нажатию D (для ручного режима)
+                    if not auto_play and not training_mode:
+                        dino.double_jump()
+
                 if event.key == pygame.K_a:
                     auto_play = not auto_play
                     print(f"Автопилот: {'ВКЛ' if auto_play else 'ВЫКЛ'}")
 
                 if event.key == pygame.K_t:
                     # Запуск быстрого обучения (симуляция)
-                    training_mode = True
-                    print("Начало сбора данных для обучения... (нажмите T снова для остановки и сохранения)")
+                    training_mode = not training_mode
+                    if training_mode:
+                        print("Начало сбора данных для обучения... (нажмите T снова для остановки и сохранения)")
+                    else:
+                        print("Остановка сбора данных. Обучение модели...")
+                        if len(train_inputs) > 0:
+                            loss = train_step(train_inputs, train_targets)
+                            save_model()
+                            print(f"Обучение завершено. Loss: {loss:.4f}")
+                        train_inputs = []
+                        train_targets = []
 
                 if event.key == pygame.K_l:
                     load_model()
@@ -336,10 +403,12 @@ def main():
             # Случайный интервал спавна
             if spawn_timer > random.randint(60, 140):
                 r = random.random()
-                if r < 0.7:
+                if r < 0.5:
                     obstacles.append(Obstacle('cactus'))
-                else:
+                elif r < 0.75:
                     obstacles.append(Obstacle('bird'))
+                else:
+                    obstacles.append(Obstacle('gap'))  # Пропасть с вероятностью ~25%
                 spawn_timer = 0
 
             # Обновление препятствий
@@ -349,21 +418,46 @@ def main():
                     obstacles.remove(obs)
                     score += 10
 
-                # Коллизия
-                # Уменьшаем хитбокс для честности (padding)
-                padding = 5
-                dino_hitbox = pygame.Rect(dino.rect.x + padding, dino.rect.y + padding,
-                                          dino.rect.width - 2*padding, dino.rect.height - 2*padding)
-                obs_hitbox = pygame.Rect(obs.rect.x + padding, obs.rect.y + padding,
-                                         obs.rect.width - 2*padding, obs.rect.height - 2*padding)
+                # Коллизия (только для кактуса и птицы, пропасть обрабатывается отдельно)
+                if obs.type in ['cactus', 'bird']:
+                    # Уменьшаем хитбокс для честности (padding)
+                    padding = 5
+                    dino_hitbox = pygame.Rect(dino.rect.x + padding, dino.rect.y + padding,
+                                              dino.rect.width - 2*padding, dino.rect.height - 2*padding)
+                    obs_hitbox = pygame.Rect(obs.rect.x + padding, obs.rect.y + padding,
+                                             obs.rect.width - 2*padding, obs.rect.height - 2*padding)
 
-                if dino_hitbox.colliderect(obs_hitbox):
-                    game_over = True
-                    if training_mode:
-                        training_mode = False
-                        print("Столкновение! Данные сброшены.")
-                        train_inputs = []
-                        train_targets = []
+                    if dino_hitbox.colliderect(obs_hitbox):
+                        game_over = True
+                        if training_mode:
+                            training_mode = False
+                            print("Столкновение! Данные сброшены.")
+                            train_inputs = []
+                            train_targets = []
+            
+            # Проверка падения в пропасть
+            over_gap = False
+            for obs in obstacles:
+                if obs.type == 'gap':
+                    # Проверяем, находится ли динозавр над пропастью
+                    if dino.rect.centerx > obs.rect.left and dino.rect.centerx < obs.rect.right:
+                        over_gap = True
+                        # Если динозавр на земле (не прыгает), он падает в пропасть
+                        if not dino.is_jumping and dino.rect.y >= GROUND_Y - dino.rect.height - 5:
+                            game_over = True
+                            if training_mode:
+                                training_mode = False
+                                print("Упал в пропасть! Данные сброшены.")
+                                train_inputs = []
+                                train_targets = []
+                        break
+            
+            # Определение, находится ли динозавр над пропастью для update()
+            for obs in obstacles:
+                if obs.type == 'gap':
+                    if dino.rect.centerx > obs.rect.left and dino.rect.centerx < obs.rect.right:
+                        over_gap = True
+                        break
 
             # Логика AI / Обучения
             if auto_play or training_mode:
@@ -381,9 +475,11 @@ def main():
                         dino.duck(True)
                     else:
                         # Если в прыжке и сеть говорит присесть - отпускаем присед (если был)
-                        # Но в нашей логике duck(False) вызывается при отпускании клавиши.
-                        # Здесь просто гарантируем, что мы не застрянем в приседе если это опасно
                         pass
+                elif action == ACTION_DOUBLE_JUMP:
+                    # Двойной прыжок
+                    if dino.is_jumping and not dino.is_ducking and dino.can_double_jump:
+                        dino.double_jump()
                 else:
                     # ACTION_NONE
                     if not auto_play and not training_mode:
@@ -402,14 +498,30 @@ def main():
                     # Периодическое обучение батчами
                     if len(train_inputs) % 50 == 0 and len(train_inputs) > 0:
                         loss = train_step(train_inputs[-100:], train_targets[-100:]) # Берем последние 100
-                        # print(f"Loss: {loss:.4f}")
+
+        # Обновление динозавра с учетом пропасти
+        dino.update(over_gap)
 
         # 3. Отрисовка
         if not training_mode:
             screen.fill(WHITE)
 
-            # Земля
-            pygame.draw.line(screen, BLACK, (0, GROUND_Y), (WIDTH, GROUND_Y), 2)
+            # Земля (рисуем с разрывами для пропасти)
+            ground_segments = [(0, GROUND_Y)]
+            for obs in obstacles:
+                if obs.type == 'gap':
+                    # Добавляем разрыв в земле
+                    if ground_segments[-1][0] < obs.rect.left:
+                        ground_segments.append((obs.rect.left, GROUND_Y))
+                    ground_segments.append((obs.rect.right, GROUND_Y))
+            ground_segments.append((WIDTH, GROUND_Y))
+            
+            # Рисуем сегменты земли
+            for i in range(0, len(ground_segments), 2):
+                if i + 1 < len(ground_segments):
+                    pygame.draw.line(screen, BLACK, 
+                                     (ground_segments[i][0], ground_segments[i][1]),
+                                     (ground_segments[i+1][0], ground_segments[i+1][1]), 2)
 
             # Сенсор (визуализация)
             if auto_play:
@@ -431,6 +543,12 @@ def main():
 
             mode_surf = font.render(status_text, True, BLUE)
             screen.blit(mode_surf, (10, 50))
+
+            # Инструкция по управлению
+            instr_font = pygame.font.Font(None, 24)
+            instr_text = "SPACE/W - Jump, S - Duck, D - Double Jump, A - AI, T - Train, R - Run Model"
+            instr_surf = instr_font.render(instr_text, True, GRAY)
+            screen.blit(instr_surf, (10, HEIGHT - 25))
 
             if game_over:
                 over_text = font.render("GAME OVER (Press SPACE)", True, RED)
